@@ -3,6 +3,7 @@ services:
     name: sangil-production
     runtime: python
     plan: starter
+    region: singapore
     buildCommand: pip install -r requirements.txt
     startCommand: uvicorn backend.app:app --host 0.0.0.0 --port $PORT
     healthCheckPath: /api/health
@@ -18,5 +19,6 @@ services:
 databases:
   - name: sangil-production-db
     plan: basic-256mb
+    region: singapore
     databaseName: sangil_production
     user: sangil_prod
