@@ -1,0 +1,39 @@
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.env
+.env.*
+!.env.example
+*.log
+
+backend/app.py.backup-public
+
+.venv/
+venv/
+env/
+
+.vscode/
+.idea/
+
+.DS_Store
+Thumbs.db
+# Sangil Production - local backups
+*.bak
+*.backup
+*.dump
+backup-*.sql
+/backups/
+/backup_before_efficiency_*/
+/backup_excel_operator_*/
+
+# Additional backup protection
+*.bak-*
+*.backup*
+*.before-*
+/Sangil-Production/
+
+# Local development and patch reports
+/checksheet-source-report.txt
+/apply_public_qr_patch.py
+/patch_notification.py

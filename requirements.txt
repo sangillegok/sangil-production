@@ -1,0 +1,7 @@
+﻿fastapi
+uvicorn[standard]
+psycopg[binary]
+python-multipart
+PyJWT
+pwdlib[argon2]
+openpyxl

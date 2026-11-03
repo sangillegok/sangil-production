@@ -1,0 +1,1119 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sangil Production</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div id="loginPage" class="login-page">
+    <div class="login-card">
+        <div class="brand">
+            <div class="brand-mark">S</div>
+            <div>
+                <h1>SANGIL</h1>
+                <p>Production Management System</p>
+            </div>
+        </div>
+
+        <div class="login-title">
+            <h2>Sign In</h2>
+            <p>Masuk ke sistem produksi</p>
+        </div>
+
+        <form id="loginForm">
+            <label>Username</label>
+            <input id="username" type="text" autocomplete="username" required>
+
+            <label>Password</label>
+            <input id="password" type="password" autocomplete="current-password" required>
+
+            <button type="submit" class="primary-btn">
+                <span>Login</span>
+            </button>
+
+            <div id="loginError" class="error-message"></div>
+        </form>
+    </div>
+</div>
+
+<div id="appPage" class="app-page hidden">
+
+    <aside class="sidebar">
+        <div class="sidebar-brand">
+            <div class="sidebar-logo"><img src="/sangil-logo.jpg" alt="Sangil Logo"></div>
+            <div>
+                <strong>SANGIL</strong>
+                <span>PRODUCTION</span>
+            </div>
+        </div>
+
+        <div class="user-panel">
+            <div class="avatar" id="userAvatar">S</div>
+            <div>
+                <strong id="displayName">User</strong>
+                <span id="displayRole">VIEWER</span>
+            </div>
+        </div>
+
+        <nav id="menu"></nav>
+
+        <button id="logoutBtn" class="logout-btn">
+            Logout
+        </button>
+    </aside>
+
+    <main class="main-content">
+
+        <header class="topbar">
+            <div>
+                <h2 id="pageTitle">Dashboard</h2>
+                <p id="pageSubtitle">Production overview</p>
+            </div>
+
+            <button id="notificationBell" class="notification-bell"
+                    type="button" style="display:none"
+                    aria-label="Lihat notifikasi checksheet">
+                <span aria-hidden="true"></span>
+                <span>Notifikasi</span>
+                <span id="notificationCount" class="notification-count">0</span>
+            </button>
+            <div class="connection">
+                <span class="status-dot"></span>
+                System Online
+            </div>
+        </header>
+
+        <section id="dashboardPage" class="page-section">
+            <div id="missingChecksheetPanel"
+                 class="section-card missing-checksheet-panel hidden"
+                 aria-live="polite">
+                <h3>Checksheet Harian</h3>
+                <p id="missingChecksheetMessage">Memeriksa checksheet...</p>
+
+                <div class="cycle-metal-dashboard-grid"
+                     style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px;margin:16px 0;">
+                    <div style="border:1px solid #286b9b;border-radius:12px;padding:16px;background:rgba(22,75,112,.15);">
+                        <h3 style="margin:0 0 8px;color:#60b9ff;">CYCLE <span id="cycleMissingCount">0 belum mengisi</span></h3>
+                        <p style="margin:0 0 10px;font-size:12px;">6 mesin CYCLE</p>
+                        <ul id="cycleMissingList" style="padding-left:20px;margin:0;"></ul>
+                    </div>
+                    <div style="border:1px solid #a66a32;border-radius:12px;padding:16px;background:rgba(112,70,22,.15);">
+                        <h3 style="margin:0 0 8px;color:#ffbd75;">METAL <span id="metalMissingCount">0 belum mengisi</span></h3>
+                        <p style="margin:0 0 10px;font-size:12px;">29 mesin METAL</p>
+                        <ul id="metalMissingList" style="padding-left:20px;margin:0;"></ul>
+                    </div>
+                </div>
+
+                <ul id="missingChecksheetList" hidden></ul>
+                <small id="missingChecksheetTime"></small>
+            </div>
+
+            <div class="dashboard-ref-head">
+                <div class="dashboard-ref-heading">
+                    <img src="/sangil-logo.jpg" alt="Logo Sangil" class="dashboard-ref-logo">
+                    <div>
+                        <span class="dashboard-ref-eyebrow">SANGIL PRODUCTION</span>
+                        <h1>Dashboard</h1>
+                        <p>Ringkas, informatif, dan fokus pada tindakan operasional.</p>
+                    </div>
+                </div>
+                <div class="dashboard-ref-meta">
+                    <span class="dashboard-live-pill"><span></span> System Online</span>
+                    <small id="dashboardDateTime">Memuat waktu Indonesia...</small>
+                </div>
+            </div>
+
+            <div class="dashboard-ref-kpis">
+                <article class="dashboard-ref-kpi kpi-complete">
+                    <div class="dashboard-kpi-icon"></div>
+                    <div class="dashboard-kpi-body">
+                        <span>Checksheet Selesai Hari Ini</span>
+                        <strong id="dashboardCompletedToday">0</strong>
+                        <p id="dashboardCompletedText">0 dari 35 mesin</p>
+                        <div class="dashboard-kpi-progress"><span id="dashboardCompletedBar"></span></div>
+                    </div>
+                    <small id="dashboardCompletedPercent">0% selesai</small>
+                </article>
+                <article class="dashboard-ref-kpi kpi-total">
+                    <div class="dashboard-kpi-icon"></div>
+                    <div class="dashboard-kpi-body">
+                        <span>Total Mesin</span>
+                        <strong id="dashboardTotalMachines">35</strong>
+                        <p>6 mesin CYCLE</p>
+                        <p>29 mesin METAL</p>
+                    </div>
+                </article>
+                <article class="dashboard-ref-kpi kpi-missing">
+                    <div class="dashboard-kpi-icon"></div>
+                    <div class="dashboard-kpi-body">
+                        <span>Belum Checksheet</span>
+                        <strong id="dashboardMissingCount">35</strong>
+                        <p>mesin belum mengisi hari ini</p>
+                        <div class="dashboard-kpi-progress missing"><span id="dashboardMissingBar"></span></div>
+                    </div>
+                </article>
+                <article class="dashboard-ref-kpi kpi-completion">
+                    <div class="dashboard-kpi-icon"></div>
+                    <div class="dashboard-kpi-body">
+                        <span>Kelengkapan</span>
+                        <div class="dashboard-completion-content">
+                            <div id="dashboardCompletionRing" class="dashboard-completion-ring"><span id="dashboardCompletionRate">0%</span></div>
+                            <div class="dashboard-completion-legend">
+                                <div><i class="legend-dot done"></i><span>Selesai</span><strong id="dashboardLegendDone">0</strong></div>
+                                <div><i class="legend-dot missing"></i><span>Belum</span><strong id="dashboardLegendMissing">35</strong></div>
+                                <div><i class="legend-dot total"></i><span>Total</span><strong>35</strong></div>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+            </div>
+
+            <div class="dashboard-ref-main-grid">
+                <section class="section-card dashboard-ref-card dashboard-activity-card">
+                    <div class="dashboard-ref-card-head">
+                        <div class="dashboard-ref-card-title">
+                            <span class="dashboard-section-icon"></span>
+                            <div><h3>Aktivitas Checksheet</h3><p>Jumlah checksheet selesai pada periode terpilih.</p></div>
+                        </div>
+                        <div class="dashboard-range-tabs" id="dashboardRangeTabs">
+                            <button type="button" data-dashboard-range="7" class="active">7 Hari</button>
+                            <button type="button" data-dashboard-range="30">30 Hari</button>
+                            <button type="button" data-dashboard-range="90">3 Bulan</button>
+                            <button type="button" data-dashboard-range="180">6 Bulan</button>
+                            <button type="button" data-dashboard-range="365">1 Tahun</button>
+                        </div>
+                    </div>
+                    <div id="dashboardDailySummary" class="dashboard-ref-summary">Memuat data aktivitas...</div>
+                    <div id="dashboardDailyChart" class="dashboard-daily-chart dashboard-ref-chart"></div>
+                </section>
+
+                <section class="section-card dashboard-ref-card dashboard-attention-card">
+                    <div class="dashboard-ref-card-head">
+                        <div class="dashboard-ref-card-title">
+                            <span class="dashboard-section-icon warning"></span>
+                            <div><h3>Perlu Perhatian</h3><p>Mesin atau item yang perlu ditindaklanjuti.</p></div>
+                        </div>
+                    </div>
+                    <div class="dashboard-attention-tabs" id="dashboardAttentionTabs">
+                        <button type="button" data-attention-filter="all" class="active">Semua (<span id="dashboardAttentionAllCount">0</span>)</button>
+                        <button type="button" data-attention-filter="missing">Belum Checksheet (<span id="dashboardAttentionMissingCount">0</span>)</button>
+                        <button type="button" data-attention-filter="abnormal">Abnormal (<span id="dashboardAttentionAbnormalCount">0</span>)</button>
+                        <button type="button" data-attention-filter="maintenance">Maintenance (<span id="dashboardAttentionMaintenanceCount">0</span>)</button>
+                    </div>
+                    <div id="dashboardAttentionTable" class="table-wrapper dashboard-attention-table">
+                        <p class="dashboard-empty-state">Memuat perhatian operasional...</p>
+                    </div>
+                </section>
+            </div>
+
+            <div class="dashboard-ref-lower-grid">
+                <section class="section-card dashboard-ref-card dashboard-groups-card">
+                    <div class="dashboard-ref-card-head">
+                        <div><h3>Kelengkapan per Kelompok</h3><p>Mesin unik yang sudah checksheet hari ini.</p></div>
+                    </div>
+                    <div class="dashboard-group-progress cycle">
+                        <div class="dashboard-group-line"><strong>CYCLE</strong><span id="dashboardCycleSummary">0 / 6 mesin</span></div>
+                        <div class="dashboard-group-track"><span id="dashboardCycleProgressBar"></span></div>
+                        <div class="dashboard-group-foot"><span id="dashboardCycleProgressText">Kelengkapan 0%</span><strong id="dashboardCyclePercent">0%</strong></div>
+                    </div>
+                    <div class="dashboard-group-progress metal">
+                        <div class="dashboard-group-line"><strong>METAL</strong><span id="dashboardMetalSummary">0 / 29 mesin</span></div>
+                        <div class="dashboard-group-track"><span id="dashboardMetalProgressBar"></span></div>
+                        <div class="dashboard-group-foot"><span id="dashboardMetalProgressText">Kelengkapan 0%</span><strong id="dashboardMetalPercent">0%</strong></div>
+                    </div>
+                </section>
+
+                <section class="section-card dashboard-ref-card dashboard-recent-card">
+                    <div class="dashboard-ref-card-head">
+                        <div><h3>Checksheet Terbaru</h3><p>Sepuluh checksheet terakhir yang tersimpan.</p></div>
+                        <button type="button" class="dashboard-see-all" data-dashboard-see-all>Lihat Semua</button>
+                    </div>
+                    <div id="dashboardRecentTable" class="table-wrapper">
+                        <p class="dashboard-empty-state">Memuat riwayat checksheet...</p>
+                    </div>
+                </section>
+            </div>
+        </section>
+
+        <section id="productionPage" class="page-section hidden">
+          <div class="section-card">
+            <div class="section-header"><div><h3>Production Checksheet</h3><p>Setiap mesin memiliki Shift, Operator, dan penyimpanan sendiri.</p></div><div class="status-badge"><span class="status-dot"></span>Effective Date: <strong id="productionDate"></strong></div></div>
+            <div id="productionMachineCards" class="production-machine-grid">
+              <article class="section-card production-machine-card" data-machine-name="Soldering">
+                <div class="section-header"><div><h3>Soldering</h3><p>8 item pemeriksaan</p></div><span class="status-badge">Machine 1</span></div>
+                <div class="form-grid production-info">
+                  
+                  <div class="form-group"><label>Operator Name</label><input class="machine-operator" type="text" placeholder="Operator name" maxlength="200"></div>
+                </div>
+                <div class="table-wrapper"><table class="data-table production-table"><thead><tr><th>No</th><th>Item Check</th><th>Status</th><th>Actual Inspec</th><th>Remarks</th></tr></thead><tbody>
+<tr><td>1</td><td><input class="check-item" type="text" value="Bearing roller" readonly></td><td><input class="check-condition" type="text" value="Not Damage" readonly></td><td><select class="actual-inspec"><option value="OK">OK</option><option value="NG">NG</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>2</td><td><input class="check-item" type="text" value="Pressure air compressor" readonly></td><td><input class="check-condition" type="text" value="3-5 Mpa" readonly></td><td><select class="actual-inspec"><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="Lain">Lain</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>3</td><td><input class="check-item" type="text" value="Pressure LPG" readonly></td><td><input class="check-condition" type="text" value="0.4-0.8 Mpa" readonly></td><td><select class="actual-inspec"><option value="0.4">0.4</option><option value="0.5">0.5</option><option value="0.6">0.6</option><option value="0.7">0.7</option><option value="0.8">0.8</option><option value="Lain">Lain</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>4</td><td><input class="check-item" type="text" value="Pressure O2" readonly></td><td><input class="check-condition" type="text" value="4-6 kgf/cm2" readonly></td><td><select class="actual-inspec"><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="Lain">Lain</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>5</td><td><input class="check-item" type="text" value="Tin Motor" readonly></td><td><input class="check-condition" type="text" value="Not Damage" readonly></td><td><select class="actual-inspec"><option value="OK">OK</option><option value="NG">NG</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>6</td><td><input class="check-item" type="text" value="Air Cylinder" readonly></td><td><input class="check-condition" type="text" value="Not Damage" readonly></td><td><select class="actual-inspec"><option value="OK">OK</option><option value="NG">NG</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>7</td><td><input class="check-item" type="text" value="Pump Water" readonly></td><td><input class="check-condition" type="text" value="Not Damage" readonly></td><td><select class="actual-inspec"><option value="OK">OK</option><option value="NG">NG</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>8</td><td><input class="check-item" type="text" value="Chain" readonly></td><td><input class="check-condition" type="text" value="Not Damage" readonly></td><td><select class="actual-inspec"><option value="OK">OK</option><option value="NG">NG</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+</tbody></table></div>
+                <div class="form-actions"><button class="btn-primary" type="button" onclick="saveProductionChecksheet(this)">Save Checksheet</button></div>
+                <div class="form-message machine-save-message" aria-live="polite"></div>
+              </article>
+              <article class="section-card production-machine-card" data-machine-name="Cutting Pipe Condenser">
+                <div class="section-header"><div><h3>Cutting Pipe Condenser</h3><p>6 item pemeriksaan</p></div><span class="status-badge">Machine 2</span></div>
+                <div class="form-grid production-info">
+                  
+                  <div class="form-group"><label>Operator Name</label><input class="machine-operator" type="text" placeholder="Operator name" maxlength="200"></div>
+                </div>
+                <div class="table-wrapper"><table class="data-table production-table"><thead><tr><th>No</th><th>Item Check</th><th>Status</th><th>Actual Inspec</th><th>Remarks</th></tr></thead><tbody>
+<tr><td>1</td><td><input class="check-item" type="text" value="Bearing roller" readonly></td><td><input class="check-condition" type="text" value="Not Damage" readonly></td><td><select class="actual-inspec"><option value="OK">OK</option><option value="NG">NG</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>2</td><td><input class="check-item" type="text" value="Pneumatic Cylinder" readonly></td><td><input class="check-condition" type="text" value="OIL Lubricant" readonly></td><td><select class="actual-inspec"><option value="OK">OK</option><option value="NG">NG</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>3</td><td><input class="check-item" type="text" value="V Belt Motor" readonly></td><td><input class="check-condition" type="text" value="Not Loose" readonly></td><td><select class="actual-inspec"><option value="OK">OK</option><option value="NG">NG</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>4</td><td><input class="check-item" type="text" value="Pressure Air Cylinder" readonly></td><td><input class="check-condition" type="text" value="3-5 Mpa" readonly></td><td><select class="actual-inspec"><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="Lain">Lain</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>5</td><td><input class="check-item" type="text" value="Change Knife Cutting" readonly></td><td><input class="check-condition" type="text" value="Not Damage" readonly></td><td><select class="actual-inspec"><option value="OK">OK</option><option value="NG">NG</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>6</td><td><input class="check-item" type="text" value="Control Process Cutting" readonly></td><td><input class="check-condition" type="text" value="Qty. Cutting" readonly></td><td><select class="actual-inspec"><option value="OK">OK</option><option value="NG">NG</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+</tbody></table></div>
+                <div class="form-actions"><button class="btn-primary" type="button" onclick="saveProductionChecksheet(this)">Save Checksheet</button></div>
+                <div class="form-message machine-save-message" aria-live="polite"></div>
+              </article>
+              <article class="section-card production-machine-card" data-machine-name="Cutting Pipe Hotline">
+                <div class="section-header"><div><h3>Cutting Pipe Hotline</h3><p>6 item pemeriksaan</p></div><span class="status-badge">Machine 3</span></div>
+                <div class="form-grid production-info">
+                  
+                  <div class="form-group"><label>Operator Name</label><input class="machine-operator" type="text" placeholder="Operator name" maxlength="200"></div>
+                </div>
+                <div class="table-wrapper"><table class="data-table production-table"><thead><tr><th>No</th><th>Item Check</th><th>Status</th><th>Actual Inspec</th><th>Remarks</th></tr></thead><tbody>
+<tr><td>1</td><td><input class="check-item" type="text" value="Bearing roller" readonly></td><td><input class="check-condition" type="text" value="Not Damage" readonly></td><td><select class="actual-inspec"><option value="OK">OK</option><option value="NG">NG</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>2</td><td><input class="check-item" type="text" value="Pneumatic Cylinder" readonly></td><td><input class="check-condition" type="text" value="OIL Lubricant" readonly></td><td><select class="actual-inspec"><option value="OK">OK</option><option value="NG">NG</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>3</td><td><input class="check-item" type="text" value="V Belt Motor" readonly></td><td><input class="check-condition" type="text" value="Not Loose" readonly></td><td><select class="actual-inspec"><option value="OK">OK</option><option value="NG">NG</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>4</td><td><input class="check-item" type="text" value="Pressure Air Cylinder" readonly></td><td><input class="check-condition" type="text" value="3-5 Mpa" readonly></td><td><select class="actual-inspec"><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="Lain">Lain</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>5</td><td><input class="check-item" type="text" value="Change Knife Cutting" readonly></td><td><input class="check-condition" type="text" value="Not Damage" readonly></td><td><select class="actual-inspec"><option value="OK">OK</option><option value="NG">NG</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>6</td><td><input class="check-item" type="text" value="Control Process Cutting" readonly></td><td><input class="check-condition" type="text" value="Qty. Cutting" readonly></td><td><select class="actual-inspec"><option value="OK">OK</option><option value="NG">NG</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+</tbody></table></div>
+                <div class="form-actions"><button class="btn-primary" type="button" onclick="saveProductionChecksheet(this)">Save Checksheet</button></div>
+                <div class="form-message machine-save-message" aria-live="polite"></div>
+              </article>
+              <article class="section-card production-machine-card" data-machine-name="Cutting Copper Tube">
+                <div class="section-header"><div><h3>Cutting Copper Tube</h3><p>5 item pemeriksaan</p></div><span class="status-badge">Machine 4</span></div>
+                <div class="form-grid production-info">
+                  
+                  <div class="form-group"><label>Operator Name</label><input class="machine-operator" type="text" placeholder="Operator name" maxlength="200"></div>
+                </div>
+                <div class="table-wrapper"><table class="data-table production-table"><thead><tr><th>No</th><th>Item Check</th><th>Status</th><th>Actual Inspec</th><th>Remarks</th></tr></thead><tbody>
+<tr><td>1</td><td><input class="check-item" type="text" value="Bearing roller" readonly></td><td><input class="check-condition" type="text" value="Not Damage" readonly></td><td><select class="actual-inspec"><option value="OK">OK</option><option value="NG">NG</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>2</td><td><input class="check-item" type="text" value="V Belt Motor" readonly></td><td><input class="check-condition" type="text" value="Not Loose" readonly></td><td><select class="actual-inspec"><option value="OK">OK</option><option value="NG">NG</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>3</td><td><input class="check-item" type="text" value="Pressure Air Cylinder" readonly></td><td><input class="check-condition" type="text" value="3-5 Mpa" readonly></td><td><select class="actual-inspec"><option value="3-5 Mpa">3-5 Mpa</option><option value="Lainnya">Lainnya</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>4</td><td><input class="check-item" type="text" value="Change Knife Cutting" readonly></td><td><input class="check-condition" type="text" value="Not Damage" readonly></td><td><select class="actual-inspec"><option value="OK">OK</option><option value="NG">NG</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>5</td><td><input class="check-item" type="text" value="Control Process Cutting" readonly></td><td><input class="check-condition" type="text" value="Qty. Cutting" readonly></td><td><select class="actual-inspec"><option value="OK">OK</option><option value="NG">NG</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+</tbody></table></div>
+                <div class="form-actions"><button class="btn-primary" type="button" onclick="saveProductionChecksheet(this)">Save Checksheet</button></div>
+                <div class="form-message machine-save-message" aria-live="polite"></div>
+              </article>
+              <article class="section-card production-machine-card" data-machine-name="Cutting &amp; Notching">
+                <div class="section-header"><div><h3>Cutting &amp; Notching</h3><p>6 item pemeriksaan</p></div><span class="status-badge">Machine 5</span></div>
+                <div class="form-grid production-info">
+                  
+                  <div class="form-group"><label>Operator Name</label><input class="machine-operator" type="text" placeholder="Operator name" maxlength="200"></div>
+                </div>
+                <div class="table-wrapper"><table class="data-table production-table"><thead><tr><th>No</th><th>Item Check</th><th>Status</th><th>Actual Inspec</th><th>Remarks</th></tr></thead><tbody>
+<tr><td>1</td><td><input class="check-item" type="text" value="Roller" readonly></td><td><input class="check-condition" type="text" value="Not Damage" readonly></td><td><select class="actual-inspec"><option value="OK">OK</option><option value="NG">NG</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>2</td><td><input class="check-item" type="text" value="V-Belt" readonly></td><td><input class="check-condition" type="text" value="Not Loose" readonly></td><td><select class="actual-inspec"><option value="OK">OK</option><option value="NG">NG</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>3</td><td><input class="check-item" type="text" value="Roller Encoder" readonly></td><td><input class="check-condition" type="text" value="Not Damage" readonly></td><td><select class="actual-inspec"><option value="OK">OK</option><option value="NG">NG</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>4</td><td><input class="check-item" type="text" value="Knife Nocthing" readonly></td><td><input class="check-condition" type="text" value="Not Damage" readonly></td><td><select class="actual-inspec"><option value="OK">OK</option><option value="NG">NG</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>5</td><td><input class="check-item" type="text" value="Pressure Air Cyclinder" readonly></td><td><input class="check-condition" type="text" value="3-5 Mpa" readonly></td><td><select class="actual-inspec"><option value="3-5 Mpa">3-5 Mpa</option><option value="Lainnya">Lainnya</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>6</td><td><input class="check-item" type="text" value="Mould Cutting" readonly></td><td><input class="check-condition" type="text" value="Not Damage" readonly></td><td><select class="actual-inspec"><option value="OK">OK</option><option value="NG">NG</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+</tbody></table></div>
+                <div class="form-actions"><button class="btn-primary" type="button" onclick="saveProductionChecksheet(this)">Save Checksheet</button></div>
+                <div class="form-message machine-save-message" aria-live="polite"></div>
+              </article>
+              <article class="section-card production-machine-card" data-machine-name="Bending Auto Condensor Pipe">
+                <div class="section-header"><div><h3>Bending Auto Condensor Pipe</h3><p>5 item pemeriksaan</p></div><span class="status-badge">Machine 6</span></div>
+                <div class="form-grid production-info">
+                  
+                  <div class="form-group"><label>Operator Name</label><input class="machine-operator" type="text" placeholder="Operator name" maxlength="200"></div>
+                </div>
+                <div class="table-wrapper"><table class="data-table production-table"><thead><tr><th>No</th><th>Item Check</th><th>Status</th><th>Actual Inspec</th><th>Remarks</th></tr></thead><tbody>
+<tr><td>1</td><td><input class="check-item" type="text" value="Clamping" readonly></td><td><input class="check-condition" type="text" value="Not Damage" readonly></td><td><select class="actual-inspec"><option value="OK">OK</option><option value="NG">NG</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>2</td><td><input class="check-item" type="text" value="Roller Encoder" readonly></td><td><input class="check-condition" type="text" value="Not Damage" readonly></td><td><select class="actual-inspec"><option value="OK">OK</option><option value="NG">NG</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>3</td><td><input class="check-item" type="text" value="Hidraulic Cylinder" readonly></td><td><input class="check-condition" type="text" value="Not Damage" readonly></td><td><select class="actual-inspec"><option value="OK">OK</option><option value="NG">NG</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>4</td><td><input class="check-item" type="text" value="Hidroulic Motor" readonly></td><td><input class="check-condition" type="text" value="Not Damage" readonly></td><td><select class="actual-inspec"><option value="OK">OK</option><option value="NG">NG</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>5</td><td><input class="check-item" type="text" value="Air Cyclinder" readonly></td><td><input class="check-condition" type="text" value="4-5 Mpa" readonly></td><td><select class="actual-inspec"><option value="4">4</option><option value="5">5</option><option value="Lain">Lain</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+</tbody></table></div>
+                <div class="form-actions"><button class="btn-primary" type="button" onclick="saveProductionChecksheet(this)">Save Checksheet</button></div>
+                <div class="form-message machine-save-message" aria-live="polite"></div>
+              </article>
+              <article class="section-card production-machine-card" data-machine-name="300T-01">
+                <div class="section-header"><div><h3>300T-01</h3><p>9 item pemeriksaan</p></div><span class="status-badge">Press Machine 1</span></div>
+                <div class="form-grid production-info"><div class="form-group"><label>Operator Name</label><input class="machine-operator" type="text" placeholder="Operator name" maxlength="200"></div></div>
+                <div class="table-wrapper"><table class="data-table production-table"><thead><tr><th>No</th><th>Item Check</th><th>Standard/Condition</th><th>Actual Inspec</th><th>Remarks</th></tr></thead><tbody>
+<tr><td>1</td><td><input class="check-item" type="text" value="Sensor Safety" readonly></td><td><input class="check-condition" type="text" value="Not Damage" readonly></td><td><select class="actual-inspec"><option value="">Pilih hasil</option><option value="OK">OK</option><option value="NG">NG</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>2</td><td><input class="check-item" type="text" value="Slide guide" readonly></td><td><input class="check-condition" type="text" value="Lubricate" readonly></td><td><select class="actual-inspec"><option value="">Pilih hasil</option><option value="OK">OK</option><option value="NG">NG</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>3</td><td><input class="check-item" type="text" value="Hydraulic pressure (clamp pump)" readonly></td><td><input class="check-condition" type="text" value="100-150 Bar" readonly></td><td><input class="actual-inspec" type="text" placeholder="Isi hasil pengukuran" maxlength="200"></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>4</td><td><input class="check-item" type="text" value="Air pressure" readonly></td><td><input class="check-condition" type="text" value="5-7 Bar" readonly></td><td><select class="actual-inspec"><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="Lainnya">Lainnya</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>5</td><td><input class="check-item" type="text" value="Temperature" readonly></td><td><input class="check-condition" type="text" value="26-33; ukur pukul 07:00 dan 13:00" readonly></td><td><input class="actual-inspec" type="text" placeholder="07:00 / 13:00" maxlength="200"></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>6</td><td><input class="check-item" type="text" value="Oil Check (clutch)" readonly></td><td><input class="check-condition" type="text" value="Spec level in" readonly></td><td><select class="actual-inspec"><option value="">Pilih hasil</option><option value="OK">OK</option><option value="NG">NG</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>7</td><td><input class="check-item" type="text" value="Fan Belt condition" readonly></td><td><input class="check-condition" type="text" value="Not damage" readonly></td><td><select class="actual-inspec"><option value="">Pilih hasil</option><option value="OK">OK</option><option value="NG">NG</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>8</td><td><input class="check-item" type="text" value="Pump Area" readonly></td><td><input class="check-condition" type="text" value="Maintenance" readonly></td><td><select class="actual-inspec"><option value="">Pilih hasil</option><option value="OK">OK</option><option value="NG">NG</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>9</td><td><input class="check-item" type="text" value="Balancing Machine" readonly></td><td><input class="check-condition" type="text" value="Centre" readonly></td><td><select class="actual-inspec"><option value="">Pilih hasil</option><option value="OK">OK</option><option value="NG">NG</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+</tbody></table></div>
+                <div class="form-actions"><button class="btn-primary" type="button" onclick="saveProductionChecksheet(this)">Save Checksheet</button></div>
+                <div class="form-message machine-save-message" aria-live="polite"></div>
+              </article>
+              <article class="section-card production-machine-card" data-machine-name="400T-01">
+                <div class="section-header"><div><h3>400T-01</h3><p>9 item pemeriksaan</p></div><span class="status-badge">Press Machine 2</span></div>
+                <div class="form-grid production-info"><div class="form-group"><label>Operator Name</label><input class="machine-operator" type="text" placeholder="Operator name" maxlength="200"></div></div>
+                <div class="table-wrapper"><table class="data-table production-table"><thead><tr><th>No</th><th>Item Check</th><th>Standard/Condition</th><th>Actual Inspec</th><th>Remarks</th></tr></thead><tbody>
+<tr><td>1</td><td><input class="check-item" type="text" value="Sensor Safety" readonly></td><td><input class="check-condition" type="text" value="Not Damage" readonly></td><td><select class="actual-inspec"><option value="">Pilih hasil</option><option value="OK">OK</option><option value="NG">NG</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>2</td><td><input class="check-item" type="text" value="Slide guide" readonly></td><td><input class="check-condition" type="text" value="Lubricate" readonly></td><td><select class="actual-inspec"><option value="">Pilih hasil</option><option value="OK">OK</option><option value="NG">NG</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>3</td><td><input class="check-item" type="text" value="Hydraulic pressure (clamp pump)" readonly></td><td><input class="check-condition" type="text" value="100-150 Bar" readonly></td><td><input class="actual-inspec" type="text" placeholder="Isi hasil pengukuran" maxlength="200"></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>4</td><td><input class="check-item" type="text" value="Air pressure" readonly></td><td><input class="check-condition" type="text" value="5-7 Bar" readonly></td><td><select class="actual-inspec"><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="Lainnya">Lainnya</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>5</td><td><input class="check-item" type="text" value="Temperature" readonly></td><td><input class="check-condition" type="text" value="26-33; ukur pukul 07:00 dan 13:00" readonly></td><td><input class="actual-inspec" type="text" placeholder="07:00 / 13:00" maxlength="200"></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>6</td><td><input class="check-item" type="text" value="Oil Check (clutch)" readonly></td><td><input class="check-condition" type="text" value="Spec level in" readonly></td><td><select class="actual-inspec"><option value="">Pilih hasil</option><option value="OK">OK</option><option value="NG">NG</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>7</td><td><input class="check-item" type="text" value="Fan Belt condition" readonly></td><td><input class="check-condition" type="text" value="Not damage" readonly></td><td><select class="actual-inspec"><option value="">Pilih hasil</option><option value="OK">OK</option><option value="NG">NG</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>8</td><td><input class="check-item" type="text" value="Pump Area" readonly></td><td><input class="check-condition" type="text" value="Maintenance" readonly></td><td><select class="actual-inspec"><option value="">Pilih hasil</option><option value="OK">OK</option><option value="NG">NG</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>9</td><td><input class="check-item" type="text" value="Balancing Machine" readonly></td><td><input class="check-condition" type="text" value="Centre" readonly></td><td><select class="actual-inspec"><option value="">Pilih hasil</option><option value="OK">OK</option><option value="NG">NG</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+</tbody></table></div>
+                <div class="form-actions"><button class="btn-primary" type="button" onclick="saveProductionChecksheet(this)">Save Checksheet</button></div>
+                <div class="form-message machine-save-message" aria-live="polite"></div>
+              </article>
+              <article class="section-card production-machine-card" data-machine-name="400T-02">
+                <div class="section-header"><div><h3>400T-02</h3><p>9 item pemeriksaan</p></div><span class="status-badge">Press Machine 3</span></div>
+                <div class="form-grid production-info"><div class="form-group"><label>Operator Name</label><input class="machine-operator" type="text" placeholder="Operator name" maxlength="200"></div></div>
+                <div class="table-wrapper"><table class="data-table production-table"><thead><tr><th>No</th><th>Item Check</th><th>Standard/Condition</th><th>Actual Inspec</th><th>Remarks</th></tr></thead><tbody>
+<tr><td>1</td><td><input class="check-item" type="text" value="Sensor Safety" readonly></td><td><input class="check-condition" type="text" value="Not Damage" readonly></td><td><select class="actual-inspec"><option value="">Pilih hasil</option><option value="OK">OK</option><option value="NG">NG</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>2</td><td><input class="check-item" type="text" value="Slide guide" readonly></td><td><input class="check-condition" type="text" value="Lubricate" readonly></td><td><select class="actual-inspec"><option value="">Pilih hasil</option><option value="OK">OK</option><option value="NG">NG</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>3</td><td><input class="check-item" type="text" value="Hydraulic pressure (clamp pump)" readonly></td><td><input class="check-condition" type="text" value="100-150 Bar" readonly></td><td><input class="actual-inspec" type="text" placeholder="Isi hasil pengukuran" maxlength="200"></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>4</td><td><input class="check-item" type="text" value="Air pressure" readonly></td><td><input class="check-condition" type="text" value="5-7 Bar" readonly></td><td><select class="actual-inspec"><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="Lainnya">Lainnya</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>5</td><td><input class="check-item" type="text" value="Temperature" readonly></td><td><input class="check-condition" type="text" value="26-33; ukur pukul 07:00 dan 13:00" readonly></td><td><input class="actual-inspec" type="text" placeholder="07:00 / 13:00" maxlength="200"></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>6</td><td><input class="check-item" type="text" value="Oil Check (clutch)" readonly></td><td><input class="check-condition" type="text" value="Spec level in" readonly></td><td><select class="actual-inspec"><option value="">Pilih hasil</option><option value="OK">OK</option><option value="NG">NG</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>7</td><td><input class="check-item" type="text" value="Fan Belt condition" readonly></td><td><input class="check-condition" type="text" value="Not damage" readonly></td><td><select class="actual-inspec"><option value="">Pilih hasil</option><option value="OK">OK</option><option value="NG">NG</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>8</td><td><input class="check-item" type="text" value="Pump Area" readonly></td><td><input class="check-condition" type="text" value="Maintenance" readonly></td><td><select class="actual-inspec"><option value="">Pilih hasil</option><option value="OK">OK</option><option value="NG">NG</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>9</td><td><input class="check-item" type="text" value="Balancing Machine" readonly></td><td><input class="check-condition" type="text" value="Centre" readonly></td><td><select class="actual-inspec"><option value="">Pilih hasil</option><option value="OK">OK</option><option value="NG">NG</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+</tbody></table></div>
+                <div class="form-actions"><button class="btn-primary" type="button" onclick="saveProductionChecksheet(this)">Save Checksheet</button></div>
+                <div class="form-message machine-save-message" aria-live="polite"></div>
+              </article>
+              <article class="section-card production-machine-card" data-machine-name="400T-03">
+                <div class="section-header"><div><h3>400T-03</h3><p>9 item pemeriksaan</p></div><span class="status-badge">Press Machine 4</span></div>
+                <div class="form-grid production-info"><div class="form-group"><label>Operator Name</label><input class="machine-operator" type="text" placeholder="Operator name" maxlength="200"></div></div>
+                <div class="table-wrapper"><table class="data-table production-table"><thead><tr><th>No</th><th>Item Check</th><th>Standard/Condition</th><th>Actual Inspec</th><th>Remarks</th></tr></thead><tbody>
+<tr><td>1</td><td><input class="check-item" type="text" value="Sensor Safety" readonly></td><td><input class="check-condition" type="text" value="Not Damage" readonly></td><td><select class="actual-inspec"><option value="">Pilih hasil</option><option value="OK">OK</option><option value="NG">NG</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>2</td><td><input class="check-item" type="text" value="Slide guide" readonly></td><td><input class="check-condition" type="text" value="Lubricate" readonly></td><td><select class="actual-inspec"><option value="">Pilih hasil</option><option value="OK">OK</option><option value="NG">NG</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>3</td><td><input class="check-item" type="text" value="Hydraulic pressure (clamp pump)" readonly></td><td><input class="check-condition" type="text" value="100-150 Bar" readonly></td><td><input class="actual-inspec" type="text" placeholder="Isi hasil pengukuran" maxlength="200"></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>4</td><td><input class="check-item" type="text" value="Air pressure" readonly></td><td><input class="check-condition" type="text" value="5-7 Bar" readonly></td><td><select class="actual-inspec"><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="Lainnya">Lainnya</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>5</td><td><input class="check-item" type="text" value="Temperature" readonly></td><td><input class="check-condition" type="text" value="26-33; ukur pukul 07:00 dan 13:00" readonly></td><td><input class="actual-inspec" type="text" placeholder="07:00 / 13:00" maxlength="200"></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>6</td><td><input class="check-item" type="text" value="Oil Check (clutch)" readonly></td><td><input class="check-condition" type="text" value="Spec level in" readonly></td><td><select class="actual-inspec"><option value="">Pilih hasil</option><option value="OK">OK</option><option value="NG">NG</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>7</td><td><input class="check-item" type="text" value="Fan Belt condition" readonly></td><td><input class="check-condition" type="text" value="Not damage" readonly></td><td><select class="actual-inspec"><option value="">Pilih hasil</option><option value="OK">OK</option><option value="NG">NG</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>8</td><td><input class="check-item" type="text" value="Pump Area" readonly></td><td><input class="check-condition" type="text" value="Maintenance" readonly></td><td><select class="actual-inspec"><option value="">Pilih hasil</option><option value="OK">OK</option><option value="NG">NG</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>9</td><td><input class="check-item" type="text" value="Balancing Machine" readonly></td><td><input class="check-condition" type="text" value="Centre" readonly></td><td><select class="actual-inspec"><option value="">Pilih hasil</option><option value="OK">OK</option><option value="NG">NG</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+</tbody></table></div>
+                <div class="form-actions"><button class="btn-primary" type="button" onclick="saveProductionChecksheet(this)">Save Checksheet</button></div>
+                <div class="form-message machine-save-message" aria-live="polite"></div>
+              </article>
+              <article class="section-card production-machine-card" data-machine-name="250T-A01">
+                <div class="section-header"><div><h3>250T-A01</h3><p>9 item pemeriksaan</p></div><span class="status-badge">Press Machine 5</span></div>
+                <div class="form-grid production-info"><div class="form-group"><label>Operator Name</label><input class="machine-operator" type="text" placeholder="Operator name" maxlength="200"></div></div>
+                <div class="table-wrapper"><table class="data-table production-table"><thead><tr><th>No</th><th>Item Check</th><th>Standard/Condition</th><th>Actual Inspec</th><th>Remarks</th></tr></thead><tbody>
+<tr><td>1</td><td><input class="check-item" type="text" value="Sensor Safety" readonly></td><td><input class="check-condition" type="text" value="Not Damage" readonly></td><td><select class="actual-inspec"><option value="">Pilih hasil</option><option value="OK">OK</option><option value="NG">NG</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>2</td><td><input class="check-item" type="text" value="Slide guide" readonly></td><td><input class="check-condition" type="text" value="Lubricate" readonly></td><td><select class="actual-inspec"><option value="">Pilih hasil</option><option value="OK">OK</option><option value="NG">NG</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>3</td><td><input class="check-item" type="text" value="Hydraulic pressure (clamp pump)" readonly></td><td><input class="check-condition" type="text" value="100-150 Bar" readonly></td><td><input class="actual-inspec" type="text" placeholder="Isi hasil pengukuran" maxlength="200"></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>4</td><td><input class="check-item" type="text" value="Air pressure" readonly></td><td><input class="check-condition" type="text" value="5-7 Bar" readonly></td><td><select class="actual-inspec"><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="Lainnya">Lainnya</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>5</td><td><input class="check-item" type="text" value="Temperature" readonly></td><td><input class="check-condition" type="text" value="26-33; ukur pukul 07:00 dan 13:00" readonly></td><td><input class="actual-inspec" type="text" placeholder="07:00 / 13:00" maxlength="200"></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>6</td><td><input class="check-item" type="text" value="Oil Check (clutch)" readonly></td><td><input class="check-condition" type="text" value="Spec level in" readonly></td><td><select class="actual-inspec"><option value="">Pilih hasil</option><option value="OK">OK</option><option value="NG">NG</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>7</td><td><input class="check-item" type="text" value="Fan Belt condition" readonly></td><td><input class="check-condition" type="text" value="Not damage" readonly></td><td><select class="actual-inspec"><option value="">Pilih hasil</option><option value="OK">OK</option><option value="NG">NG</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>8</td><td><input class="check-item" type="text" value="Pump Area" readonly></td><td><input class="check-condition" type="text" value="Maintenance" readonly></td><td><select class="actual-inspec"><option value="">Pilih hasil</option><option value="OK">OK</option><option value="NG">NG</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>9</td><td><input class="check-item" type="text" value="Balancing Machine" readonly></td><td><input class="check-condition" type="text" value="Centre" readonly></td><td><select class="actual-inspec"><option value="">Pilih hasil</option><option value="OK">OK</option><option value="NG">NG</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+</tbody></table></div>
+                <div class="form-actions"><button class="btn-primary" type="button" onclick="saveProductionChecksheet(this)">Save Checksheet</button></div>
+                <div class="form-message machine-save-message" aria-live="polite"></div>
+              </article>
+              <article class="section-card production-machine-card" data-machine-name="300T-02">
+                <div class="section-header"><div><h3>300T-02</h3><p>9 item pemeriksaan</p></div><span class="status-badge">Press Machine 6</span></div>
+                <div class="form-grid production-info"><div class="form-group"><label>Operator Name</label><input class="machine-operator" type="text" placeholder="Operator name" maxlength="200"></div></div>
+                <div class="table-wrapper"><table class="data-table production-table"><thead><tr><th>No</th><th>Item Check</th><th>Standard/Condition</th><th>Actual Inspec</th><th>Remarks</th></tr></thead><tbody>
+<tr><td>1</td><td><input class="check-item" type="text" value="Sensor Safety" readonly></td><td><input class="check-condition" type="text" value="Not Damage" readonly></td><td><select class="actual-inspec"><option value="">Pilih hasil</option><option value="OK">OK</option><option value="NG">NG</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>2</td><td><input class="check-item" type="text" value="Slide guide" readonly></td><td><input class="check-condition" type="text" value="Lubricate" readonly></td><td><select class="actual-inspec"><option value="">Pilih hasil</option><option value="OK">OK</option><option value="NG">NG</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>3</td><td><input class="check-item" type="text" value="Hydraulic pressure (clamp pump)" readonly></td><td><input class="check-condition" type="text" value="100-150 Bar" readonly></td><td><input class="actual-inspec" type="text" placeholder="Isi hasil pengukuran" maxlength="200"></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>4</td><td><input class="check-item" type="text" value="Air pressure" readonly></td><td><input class="check-condition" type="text" value="5-7 Bar" readonly></td><td><select class="actual-inspec"><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="Lainnya">Lainnya</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>5</td><td><input class="check-item" type="text" value="Temperature" readonly></td><td><input class="check-condition" type="text" value="26-33; ukur pukul 07:00 dan 13:00" readonly></td><td><input class="actual-inspec" type="text" placeholder="07:00 / 13:00" maxlength="200"></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>6</td><td><input class="check-item" type="text" value="Oil Check (clutch)" readonly></td><td><input class="check-condition" type="text" value="Spec level in" readonly></td><td><select class="actual-inspec"><option value="">Pilih hasil</option><option value="OK">OK</option><option value="NG">NG</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>7</td><td><input class="check-item" type="text" value="Fan Belt condition" readonly></td><td><input class="check-condition" type="text" value="Not damage" readonly></td><td><select class="actual-inspec"><option value="">Pilih hasil</option><option value="OK">OK</option><option value="NG">NG</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>8</td><td><input class="check-item" type="text" value="Pump Area" readonly></td><td><input class="check-condition" type="text" value="Maintenance" readonly></td><td><select class="actual-inspec"><option value="">Pilih hasil</option><option value="OK">OK</option><option value="NG">NG</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>9</td><td><input class="check-item" type="text" value="Balancing Machine" readonly></td><td><input class="check-condition" type="text" value="Centre" readonly></td><td><select class="actual-inspec"><option value="">Pilih hasil</option><option value="OK">OK</option><option value="NG">NG</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+</tbody></table></div>
+                <div class="form-actions"><button class="btn-primary" type="button" onclick="saveProductionChecksheet(this)">Save Checksheet</button></div>
+                <div class="form-message machine-save-message" aria-live="polite"></div>
+              </article>
+              <article class="section-card production-machine-card" data-machine-name="400T-04">
+                <div class="section-header"><div><h3>400T-04</h3><p>9 item pemeriksaan</p></div><span class="status-badge">Press Machine 7</span></div>
+                <div class="form-grid production-info"><div class="form-group"><label>Operator Name</label><input class="machine-operator" type="text" placeholder="Operator name" maxlength="200"></div></div>
+                <div class="table-wrapper"><table class="data-table production-table"><thead><tr><th>No</th><th>Item Check</th><th>Standard/Condition</th><th>Actual Inspec</th><th>Remarks</th></tr></thead><tbody>
+<tr><td>1</td><td><input class="check-item" type="text" value="Sensor Safety" readonly></td><td><input class="check-condition" type="text" value="Not Damage" readonly></td><td><select class="actual-inspec"><option value="">Pilih hasil</option><option value="OK">OK</option><option value="NG">NG</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>2</td><td><input class="check-item" type="text" value="Slide guide" readonly></td><td><input class="check-condition" type="text" value="Lubricate" readonly></td><td><select class="actual-inspec"><option value="">Pilih hasil</option><option value="OK">OK</option><option value="NG">NG</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>3</td><td><input class="check-item" type="text" value="Hydraulic pressure (clamp pump)" readonly></td><td><input class="check-condition" type="text" value="100-150 Bar" readonly></td><td><input class="actual-inspec" type="text" placeholder="Isi hasil pengukuran" maxlength="200"></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>4</td><td><input class="check-item" type="text" value="Air pressure" readonly></td><td><input class="check-condition" type="text" value="5-7 Bar" readonly></td><td><select class="actual-inspec"><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="Lainnya">Lainnya</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>5</td><td><input class="check-item" type="text" value="Temperature" readonly></td><td><input class="check-condition" type="text" value="26-33; ukur pukul 07:00 dan 13:00" readonly></td><td><input class="actual-inspec" type="text" placeholder="07:00 / 13:00" maxlength="200"></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>6</td><td><input class="check-item" type="text" value="Oil Check (clutch)" readonly></td><td><input class="check-condition" type="text" value="Spec level in" readonly></td><td><select class="actual-inspec"><option value="">Pilih hasil</option><option value="OK">OK</option><option value="NG">NG</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>7</td><td><input class="check-item" type="text" value="Fan Belt condition" readonly></td><td><input class="check-condition" type="text" value="Not damage" readonly></td><td><select class="actual-inspec"><option value="">Pilih hasil</option><option value="OK">OK</option><option value="NG">NG</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>8</td><td><input class="check-item" type="text" value="Pump Area" readonly></td><td><input class="check-condition" type="text" value="Maintenance" readonly></td><td><select class="actual-inspec"><option value="">Pilih hasil</option><option value="OK">OK</option><option value="NG">NG</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>9</td><td><input class="check-item" type="text" value="Balancing Machine" readonly></td><td><input class="check-condition" type="text" value="Centre" readonly></td><td><select class="actual-inspec"><option value="">Pilih hasil</option><option value="OK">OK</option><option value="NG">NG</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+</tbody></table></div>
+                <div class="form-actions"><button class="btn-primary" type="button" onclick="saveProductionChecksheet(this)">Save Checksheet</button></div>
+                <div class="form-message machine-save-message" aria-live="polite"></div>
+              </article>
+              <article class="section-card production-machine-card" data-machine-name="250T-A02">
+                <div class="section-header"><div><h3>250T-A02</h3><p>9 item pemeriksaan</p></div><span class="status-badge">Press Machine 8</span></div>
+                <div class="form-grid production-info"><div class="form-group"><label>Operator Name</label><input class="machine-operator" type="text" placeholder="Operator name" maxlength="200"></div></div>
+                <div class="table-wrapper"><table class="data-table production-table"><thead><tr><th>No</th><th>Item Check</th><th>Standard/Condition</th><th>Actual Inspec</th><th>Remarks</th></tr></thead><tbody>
+<tr><td>1</td><td><input class="check-item" type="text" value="Sensor Safety" readonly></td><td><input class="check-condition" type="text" value="Not Damage" readonly></td><td><select class="actual-inspec"><option value="">Pilih hasil</option><option value="OK">OK</option><option value="NG">NG</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>2</td><td><input class="check-item" type="text" value="Slide guide" readonly></td><td><input class="check-condition" type="text" value="Lubricate" readonly></td><td><select class="actual-inspec"><option value="">Pilih hasil</option><option value="OK">OK</option><option value="NG">NG</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>3</td><td><input class="check-item" type="text" value="Hydraulic pressure (clamp pump)" readonly></td><td><input class="check-condition" type="text" value="100-150 Bar" readonly></td><td><input class="actual-inspec" type="text" placeholder="Isi hasil pengukuran" maxlength="200"></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>4</td><td><input class="check-item" type="text" value="Air pressure" readonly></td><td><input class="check-condition" type="text" value="5-7 Bar" readonly></td><td><select class="actual-inspec"><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="Lainnya">Lainnya</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>5</td><td><input class="check-item" type="text" value="Temperature" readonly></td><td><input class="check-condition" type="text" value="26-33; ukur pukul 07:00 dan 13:00" readonly></td><td><input class="actual-inspec" type="text" placeholder="07:00 / 13:00" maxlength="200"></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>6</td><td><input class="check-item" type="text" value="Oil Check (clutch)" readonly></td><td><input class="check-condition" type="text" value="Spec level in" readonly></td><td><select class="actual-inspec"><option value="">Pilih hasil</option><option value="OK">OK</option><option value="NG">NG</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>7</td><td><input class="check-item" type="text" value="Fan Belt condition" readonly></td><td><input class="check-condition" type="text" value="Not damage" readonly></td><td><select class="actual-inspec"><option value="">Pilih hasil</option><option value="OK">OK</option><option value="NG">NG</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>8</td><td><input class="check-item" type="text" value="Pump Area" readonly></td><td><input class="check-condition" type="text" value="Maintenance" readonly></td><td><select class="actual-inspec"><option value="">Pilih hasil</option><option value="OK">OK</option><option value="NG">NG</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>9</td><td><input class="check-item" type="text" value="Balancing Machine" readonly></td><td><input class="check-condition" type="text" value="Centre" readonly></td><td><select class="actual-inspec"><option value="">Pilih hasil</option><option value="OK">OK</option><option value="NG">NG</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+</tbody></table></div>
+                <div class="form-actions"><button class="btn-primary" type="button" onclick="saveProductionChecksheet(this)">Save Checksheet</button></div>
+                <div class="form-message machine-save-message" aria-live="polite"></div>
+              </article>
+              <article class="section-card production-machine-card" data-machine-name="250T-A03">
+                <div class="section-header"><div><h3>250T-A03</h3><p>9 item pemeriksaan</p></div><span class="status-badge">Press Machine 9</span></div>
+                <div class="form-grid production-info"><div class="form-group"><label>Operator Name</label><input class="machine-operator" type="text" placeholder="Operator name" maxlength="200"></div></div>
+                <div class="table-wrapper"><table class="data-table production-table"><thead><tr><th>No</th><th>Item Check</th><th>Standard/Condition</th><th>Actual Inspec</th><th>Remarks</th></tr></thead><tbody>
+<tr><td>1</td><td><input class="check-item" type="text" value="Sensor Safety" readonly></td><td><input class="check-condition" type="text" value="Not Damage" readonly></td><td><select class="actual-inspec"><option value="">Pilih hasil</option><option value="OK">OK</option><option value="NG">NG</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>2</td><td><input class="check-item" type="text" value="Slide guide" readonly></td><td><input class="check-condition" type="text" value="Lubricate" readonly></td><td><select class="actual-inspec"><option value="">Pilih hasil</option><option value="OK">OK</option><option value="NG">NG</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>3</td><td><input class="check-item" type="text" value="Hydraulic pressure (clamp pump)" readonly></td><td><input class="check-condition" type="text" value="100-150 Bar" readonly></td><td><input class="actual-inspec" type="text" placeholder="Isi hasil pengukuran" maxlength="200"></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>4</td><td><input class="check-item" type="text" value="Air pressure" readonly></td><td><input class="check-condition" type="text" value="5-7 Bar" readonly></td><td><select class="actual-inspec"><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="Lainnya">Lainnya</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>5</td><td><input class="check-item" type="text" value="Temperature" readonly></td><td><input class="check-condition" type="text" value="26-33; ukur pukul 07:00 dan 13:00" readonly></td><td><input class="actual-inspec" type="text" placeholder="07:00 / 13:00" maxlength="200"></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>6</td><td><input class="check-item" type="text" value="Oil Check (clutch)" readonly></td><td><input class="check-condition" type="text" value="Spec level in" readonly></td><td><select class="actual-inspec"><option value="">Pilih hasil</option><option value="OK">OK</option><option value="NG">NG</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>7</td><td><input class="check-item" type="text" value="Fan Belt condition" readonly></td><td><input class="check-condition" type="text" value="Not damage" readonly></td><td><select class="actual-inspec"><option value="">Pilih hasil</option><option value="OK">OK</option><option value="NG">NG</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>8</td><td><input class="check-item" type="text" value="Pump Area" readonly></td><td><input class="check-condition" type="text" value="Maintenance" readonly></td><td><select class="actual-inspec"><option value="">Pilih hasil</option><option value="OK">OK</option><option value="NG">NG</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>9</td><td><input class="check-item" type="text" value="Balancing Machine" readonly></td><td><input class="check-condition" type="text" value="Centre" readonly></td><td><select class="actual-inspec"><option value="">Pilih hasil</option><option value="OK">OK</option><option value="NG">NG</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+</tbody></table></div>
+                <div class="form-actions"><button class="btn-primary" type="button" onclick="saveProductionChecksheet(this)">Save Checksheet</button></div>
+                <div class="form-message machine-save-message" aria-live="polite"></div>
+              </article>
+              <article class="section-card production-machine-card" data-machine-name="250T-A04">
+                <div class="section-header"><div><h3>250T-A04</h3><p>9 item pemeriksaan</p></div><span class="status-badge">Press Machine 10</span></div>
+                <div class="form-grid production-info"><div class="form-group"><label>Operator Name</label><input class="machine-operator" type="text" placeholder="Operator name" maxlength="200"></div></div>
+                <div class="table-wrapper"><table class="data-table production-table"><thead><tr><th>No</th><th>Item Check</th><th>Standard/Condition</th><th>Actual Inspec</th><th>Remarks</th></tr></thead><tbody>
+<tr><td>1</td><td><input class="check-item" type="text" value="Sensor Safety" readonly></td><td><input class="check-condition" type="text" value="Not Damage" readonly></td><td><select class="actual-inspec"><option value="">Pilih hasil</option><option value="OK">OK</option><option value="NG">NG</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>2</td><td><input class="check-item" type="text" value="Slide guide" readonly></td><td><input class="check-condition" type="text" value="Lubricate" readonly></td><td><select class="actual-inspec"><option value="">Pilih hasil</option><option value="OK">OK</option><option value="NG">NG</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>3</td><td><input class="check-item" type="text" value="Hydraulic pressure (clamp pump)" readonly></td><td><input class="check-condition" type="text" value="100-150 Bar" readonly></td><td><input class="actual-inspec" type="text" placeholder="Isi hasil pengukuran" maxlength="200"></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>4</td><td><input class="check-item" type="text" value="Air pressure" readonly></td><td><input class="check-condition" type="text" value="5-7 Bar" readonly></td><td><select class="actual-inspec"><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="Lainnya">Lainnya</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>5</td><td><input class="check-item" type="text" value="Temperature" readonly></td><td><input class="check-condition" type="text" value="26-33; ukur pukul 07:00 dan 13:00" readonly></td><td><input class="actual-inspec" type="text" placeholder="07:00 / 13:00" maxlength="200"></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>6</td><td><input class="check-item" type="text" value="Oil Check (clutch)" readonly></td><td><input class="check-condition" type="text" value="Spec level in" readonly></td><td><select class="actual-inspec"><option value="">Pilih hasil</option><option value="OK">OK</option><option value="NG">NG</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>7</td><td><input class="check-item" type="text" value="Fan Belt condition" readonly></td><td><input class="check-condition" type="text" value="Not damage" readonly></td><td><select class="actual-inspec"><option value="">Pilih hasil</option><option value="OK">OK</option><option value="NG">NG</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>8</td><td><input class="check-item" type="text" value="Pump Area" readonly></td><td><input class="check-condition" type="text" value="Maintenance" readonly></td><td><select class="actual-inspec"><option value="">Pilih hasil</option><option value="OK">OK</option><option value="NG">NG</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>9</td><td><input class="check-item" type="text" value="Balancing Machine" readonly></td><td><input class="check-condition" type="text" value="Centre" readonly></td><td><select class="actual-inspec"><option value="">Pilih hasil</option><option value="OK">OK</option><option value="NG">NG</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+</tbody></table></div>
+                <div class="form-actions"><button class="btn-primary" type="button" onclick="saveProductionChecksheet(this)">Save Checksheet</button></div>
+                <div class="form-message machine-save-message" aria-live="polite"></div>
+              </article>
+              <article class="section-card production-machine-card" data-machine-name="250T-A05">
+                <div class="section-header"><div><h3>250T-A05</h3><p>9 item pemeriksaan</p></div><span class="status-badge">Press Machine 11</span></div>
+                <div class="form-grid production-info"><div class="form-group"><label>Operator Name</label><input class="machine-operator" type="text" placeholder="Operator name" maxlength="200"></div></div>
+                <div class="table-wrapper"><table class="data-table production-table"><thead><tr><th>No</th><th>Item Check</th><th>Standard/Condition</th><th>Actual Inspec</th><th>Remarks</th></tr></thead><tbody>
+<tr><td>1</td><td><input class="check-item" type="text" value="Sensor Safety" readonly></td><td><input class="check-condition" type="text" value="Not Damage" readonly></td><td><select class="actual-inspec"><option value="">Pilih hasil</option><option value="OK">OK</option><option value="NG">NG</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>2</td><td><input class="check-item" type="text" value="Slide guide" readonly></td><td><input class="check-condition" type="text" value="Lubricate" readonly></td><td><select class="actual-inspec"><option value="">Pilih hasil</option><option value="OK">OK</option><option value="NG">NG</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>3</td><td><input class="check-item" type="text" value="Hydraulic pressure (clamp pump)" readonly></td><td><input class="check-condition" type="text" value="100-150 Bar" readonly></td><td><input class="actual-inspec" type="text" placeholder="Isi hasil pengukuran" maxlength="200"></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>4</td><td><input class="check-item" type="text" value="Air pressure" readonly></td><td><input class="check-condition" type="text" value="5-7 Bar" readonly></td><td><select class="actual-inspec"><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="Lainnya">Lainnya</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>5</td><td><input class="check-item" type="text" value="Temperature" readonly></td><td><input class="check-condition" type="text" value="26-33; ukur pukul 07:00 dan 13:00" readonly></td><td><input class="actual-inspec" type="text" placeholder="07:00 / 13:00" maxlength="200"></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>6</td><td><input class="check-item" type="text" value="Oil Check (clutch)" readonly></td><td><input class="check-condition" type="text" value="Spec level in" readonly></td><td><select class="actual-inspec"><option value="">Pilih hasil</option><option value="OK">OK</option><option value="NG">NG</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>7</td><td><input class="check-item" type="text" value="Fan Belt condition" readonly></td><td><input class="check-condition" type="text" value="Not damage" readonly></td><td><select class="actual-inspec"><option value="">Pilih hasil</option><option value="OK">OK</option><option value="NG">NG</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>8</td><td><input class="check-item" type="text" value="Pump Area" readonly></td><td><input class="check-condition" type="text" value="Maintenance" readonly></td><td><select class="actual-inspec"><option value="">Pilih hasil</option><option value="OK">OK</option><option value="NG">NG</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>9</td><td><input class="check-item" type="text" value="Balancing Machine" readonly></td><td><input class="check-condition" type="text" value="Centre" readonly></td><td><select class="actual-inspec"><option value="">Pilih hasil</option><option value="OK">OK</option><option value="NG">NG</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+</tbody></table></div>
+                <div class="form-actions"><button class="btn-primary" type="button" onclick="saveProductionChecksheet(this)">Save Checksheet</button></div>
+                <div class="form-message machine-save-message" aria-live="polite"></div>
+              </article>
+              <article class="section-card production-machine-card" data-machine-name="250T-A06">
+                <div class="section-header"><div><h3>250T-A06</h3><p>9 item pemeriksaan</p></div><span class="status-badge">Press Machine 12</span></div>
+                <div class="form-grid production-info"><div class="form-group"><label>Operator Name</label><input class="machine-operator" type="text" placeholder="Operator name" maxlength="200"></div></div>
+                <div class="table-wrapper"><table class="data-table production-table"><thead><tr><th>No</th><th>Item Check</th><th>Standard/Condition</th><th>Actual Inspec</th><th>Remarks</th></tr></thead><tbody>
+<tr><td>1</td><td><input class="check-item" type="text" value="Sensor Safety" readonly></td><td><input class="check-condition" type="text" value="Not Damage" readonly></td><td><select class="actual-inspec"><option value="">Pilih hasil</option><option value="OK">OK</option><option value="NG">NG</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>2</td><td><input class="check-item" type="text" value="Slide guide" readonly></td><td><input class="check-condition" type="text" value="Lubricate" readonly></td><td><select class="actual-inspec"><option value="">Pilih hasil</option><option value="OK">OK</option><option value="NG">NG</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>3</td><td><input class="check-item" type="text" value="Hydraulic pressure (clamp pump)" readonly></td><td><input class="check-condition" type="text" value="100-150 Bar" readonly></td><td><input class="actual-inspec" type="text" placeholder="Isi hasil pengukuran" maxlength="200"></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>4</td><td><input class="check-item" type="text" value="Air pressure" readonly></td><td><input class="check-condition" type="text" value="5-7 Bar" readonly></td><td><select class="actual-inspec"><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="Lainnya">Lainnya</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>5</td><td><input class="check-item" type="text" value="Temperature" readonly></td><td><input class="check-condition" type="text" value="26-33; ukur pukul 07:00 dan 13:00" readonly></td><td><input class="actual-inspec" type="text" placeholder="07:00 / 13:00" maxlength="200"></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>6</td><td><input class="check-item" type="text" value="Oil Check (clutch)" readonly></td><td><input class="check-condition" type="text" value="Spec level in" readonly></td><td><select class="actual-inspec"><option value="">Pilih hasil</option><option value="OK">OK</option><option value="NG">NG</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>7</td><td><input class="check-item" type="text" value="Fan Belt condition" readonly></td><td><input class="check-condition" type="text" value="Not damage" readonly></td><td><select class="actual-inspec"><option value="">Pilih hasil</option><option value="OK">OK</option><option value="NG">NG</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>8</td><td><input class="check-item" type="text" value="Pump Area" readonly></td><td><input class="check-condition" type="text" value="Maintenance" readonly></td><td><select class="actual-inspec"><option value="">Pilih hasil</option><option value="OK">OK</option><option value="NG">NG</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>9</td><td><input class="check-item" type="text" value="Balancing Machine" readonly></td><td><input class="check-condition" type="text" value="Centre" readonly></td><td><select class="actual-inspec"><option value="">Pilih hasil</option><option value="OK">OK</option><option value="NG">NG</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+</tbody></table></div>
+                <div class="form-actions"><button class="btn-primary" type="button" onclick="saveProductionChecksheet(this)">Save Checksheet</button></div>
+                <div class="form-message machine-save-message" aria-live="polite"></div>
+              </article>
+              <article class="section-card production-machine-card" data-machine-name="250T-B01">
+                <div class="section-header"><div><h3>250T-B01</h3><p>9 item pemeriksaan</p></div><span class="status-badge">Press Machine 13</span></div>
+                <div class="form-grid production-info"><div class="form-group"><label>Operator Name</label><input class="machine-operator" type="text" placeholder="Operator name" maxlength="200"></div></div>
+                <div class="table-wrapper"><table class="data-table production-table"><thead><tr><th>No</th><th>Item Check</th><th>Standard/Condition</th><th>Actual Inspec</th><th>Remarks</th></tr></thead><tbody>
+<tr><td>1</td><td><input class="check-item" type="text" value="Sensor Safety" readonly></td><td><input class="check-condition" type="text" value="Not Damage" readonly></td><td><select class="actual-inspec"><option value="">Pilih hasil</option><option value="OK">OK</option><option value="NG">NG</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>2</td><td><input class="check-item" type="text" value="Slide guide" readonly></td><td><input class="check-condition" type="text" value="Lubricate" readonly></td><td><select class="actual-inspec"><option value="">Pilih hasil</option><option value="OK">OK</option><option value="NG">NG</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>3</td><td><input class="check-item" type="text" value="Hydraulic pressure (clamp pump)" readonly></td><td><input class="check-condition" type="text" value="100-150 Bar" readonly></td><td><input class="actual-inspec" type="text" placeholder="Isi hasil pengukuran" maxlength="200"></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>4</td><td><input class="check-item" type="text" value="Air pressure" readonly></td><td><input class="check-condition" type="text" value="5-7 Bar" readonly></td><td><select class="actual-inspec"><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="Lainnya">Lainnya</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>5</td><td><input class="check-item" type="text" value="Temperature" readonly></td><td><input class="check-condition" type="text" value="26-33; ukur pukul 07:00 dan 13:00" readonly></td><td><input class="actual-inspec" type="text" placeholder="07:00 / 13:00" maxlength="200"></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>6</td><td><input class="check-item" type="text" value="Oil Check (clutch)" readonly></td><td><input class="check-condition" type="text" value="Spec level in" readonly></td><td><select class="actual-inspec"><option value="">Pilih hasil</option><option value="OK">OK</option><option value="NG">NG</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>7</td><td><input class="check-item" type="text" value="Fan Belt condition" readonly></td><td><input class="check-condition" type="text" value="Not damage" readonly></td><td><select class="actual-inspec"><option value="">Pilih hasil</option><option value="OK">OK</option><option value="NG">NG</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>8</td><td><input class="check-item" type="text" value="Pump Area" readonly></td><td><input class="check-condition" type="text" value="Maintenance" readonly></td><td><select class="actual-inspec"><option value="">Pilih hasil</option><option value="OK">OK</option><option value="NG">NG</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>9</td><td><input class="check-item" type="text" value="Balancing Machine" readonly></td><td><input class="check-condition" type="text" value="Centre" readonly></td><td><select class="actual-inspec"><option value="">Pilih hasil</option><option value="OK">OK</option><option value="NG">NG</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+</tbody></table></div>
+                <div class="form-actions"><button class="btn-primary" type="button" onclick="saveProductionChecksheet(this)">Save Checksheet</button></div>
+                <div class="form-message machine-save-message" aria-live="polite"></div>
+              </article>
+              <article class="section-card production-machine-card" data-machine-name="250T-B02">
+                <div class="section-header"><div><h3>250T-B02</h3><p>9 item pemeriksaan</p></div><span class="status-badge">Press Machine 14</span></div>
+                <div class="form-grid production-info"><div class="form-group"><label>Operator Name</label><input class="machine-operator" type="text" placeholder="Operator name" maxlength="200"></div></div>
+                <div class="table-wrapper"><table class="data-table production-table"><thead><tr><th>No</th><th>Item Check</th><th>Standard/Condition</th><th>Actual Inspec</th><th>Remarks</th></tr></thead><tbody>
+<tr><td>1</td><td><input class="check-item" type="text" value="Sensor Safety" readonly></td><td><input class="check-condition" type="text" value="Not Damage" readonly></td><td><select class="actual-inspec"><option value="">Pilih hasil</option><option value="OK">OK</option><option value="NG">NG</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>2</td><td><input class="check-item" type="text" value="Slide guide" readonly></td><td><input class="check-condition" type="text" value="Lubricate" readonly></td><td><select class="actual-inspec"><option value="">Pilih hasil</option><option value="OK">OK</option><option value="NG">NG</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>3</td><td><input class="check-item" type="text" value="Hydraulic pressure (clamp pump)" readonly></td><td><input class="check-condition" type="text" value="100-150 Bar" readonly></td><td><input class="actual-inspec" type="text" placeholder="Isi hasil pengukuran" maxlength="200"></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>4</td><td><input class="check-item" type="text" value="Air pressure" readonly></td><td><input class="check-condition" type="text" value="5-7 Bar" readonly></td><td><select class="actual-inspec"><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="Lainnya">Lainnya</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>5</td><td><input class="check-item" type="text" value="Temperature" readonly></td><td><input class="check-condition" type="text" value="26-33; ukur pukul 07:00 dan 13:00" readonly></td><td><input class="actual-inspec" type="text" placeholder="07:00 / 13:00" maxlength="200"></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>6</td><td><input class="check-item" type="text" value="Oil Check (clutch)" readonly></td><td><input class="check-condition" type="text" value="Spec level in" readonly></td><td><select class="actual-inspec"><option value="">Pilih hasil</option><option value="OK">OK</option><option value="NG">NG</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>7</td><td><input class="check-item" type="text" value="Fan Belt condition" readonly></td><td><input class="check-condition" type="text" value="Not damage" readonly></td><td><select class="actual-inspec"><option value="">Pilih hasil</option><option value="OK">OK</option><option value="NG">NG</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>8</td><td><input class="check-item" type="text" value="Pump Area" readonly></td><td><input class="check-condition" type="text" value="Maintenance" readonly></td><td><select class="actual-inspec"><option value="">Pilih hasil</option><option value="OK">OK</option><option value="NG">NG</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>9</td><td><input class="check-item" type="text" value="Balancing Machine" readonly></td><td><input class="check-condition" type="text" value="Centre" readonly></td><td><select class="actual-inspec"><option value="">Pilih hasil</option><option value="OK">OK</option><option value="NG">NG</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+</tbody></table></div>
+                <div class="form-actions"><button class="btn-primary" type="button" onclick="saveProductionChecksheet(this)">Save Checksheet</button></div>
+                <div class="form-message machine-save-message" aria-live="polite"></div>
+              </article>
+              <article class="section-card production-machine-card" data-machine-name="250T-B03">
+                <div class="section-header"><div><h3>250T-B03</h3><p>9 item pemeriksaan</p></div><span class="status-badge">Press Machine 15</span></div>
+                <div class="form-grid production-info"><div class="form-group"><label>Operator Name</label><input class="machine-operator" type="text" placeholder="Operator name" maxlength="200"></div></div>
+                <div class="table-wrapper"><table class="data-table production-table"><thead><tr><th>No</th><th>Item Check</th><th>Standard/Condition</th><th>Actual Inspec</th><th>Remarks</th></tr></thead><tbody>
+<tr><td>1</td><td><input class="check-item" type="text" value="Sensor Safety" readonly></td><td><input class="check-condition" type="text" value="Not Damage" readonly></td><td><select class="actual-inspec"><option value="">Pilih hasil</option><option value="OK">OK</option><option value="NG">NG</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>2</td><td><input class="check-item" type="text" value="Slide guide" readonly></td><td><input class="check-condition" type="text" value="Lubricate" readonly></td><td><select class="actual-inspec"><option value="">Pilih hasil</option><option value="OK">OK</option><option value="NG">NG</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>3</td><td><input class="check-item" type="text" value="Hydraulic pressure (clamp pump)" readonly></td><td><input class="check-condition" type="text" value="100-150 Bar" readonly></td><td><input class="actual-inspec" type="text" placeholder="Isi hasil pengukuran" maxlength="200"></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>4</td><td><input class="check-item" type="text" value="Air pressure" readonly></td><td><input class="check-condition" type="text" value="5-7 Bar" readonly></td><td><select class="actual-inspec"><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="Lainnya">Lainnya</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>5</td><td><input class="check-item" type="text" value="Temperature" readonly></td><td><input class="check-condition" type="text" value="26-33; ukur pukul 07:00 dan 13:00" readonly></td><td><input class="actual-inspec" type="text" placeholder="07:00 / 13:00" maxlength="200"></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>6</td><td><input class="check-item" type="text" value="Oil Check (clutch)" readonly></td><td><input class="check-condition" type="text" value="Spec level in" readonly></td><td><select class="actual-inspec"><option value="">Pilih hasil</option><option value="OK">OK</option><option value="NG">NG</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>7</td><td><input class="check-item" type="text" value="Fan Belt condition" readonly></td><td><input class="check-condition" type="text" value="Not damage" readonly></td><td><select class="actual-inspec"><option value="">Pilih hasil</option><option value="OK">OK</option><option value="NG">NG</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>8</td><td><input class="check-item" type="text" value="Pump Area" readonly></td><td><input class="check-condition" type="text" value="Maintenance" readonly></td><td><select class="actual-inspec"><option value="">Pilih hasil</option><option value="OK">OK</option><option value="NG">NG</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>9</td><td><input class="check-item" type="text" value="Balancing Machine" readonly></td><td><input class="check-condition" type="text" value="Centre" readonly></td><td><select class="actual-inspec"><option value="">Pilih hasil</option><option value="OK">OK</option><option value="NG">NG</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+</tbody></table></div>
+                <div class="form-actions"><button class="btn-primary" type="button" onclick="saveProductionChecksheet(this)">Save Checksheet</button></div>
+                <div class="form-message machine-save-message" aria-live="polite"></div>
+              </article>
+              <article class="section-card production-machine-card" data-machine-name="250T-B04">
+                <div class="section-header"><div><h3>250T-B04</h3><p>9 item pemeriksaan</p></div><span class="status-badge">Press Machine 16</span></div>
+                <div class="form-grid production-info"><div class="form-group"><label>Operator Name</label><input class="machine-operator" type="text" placeholder="Operator name" maxlength="200"></div></div>
+                <div class="table-wrapper"><table class="data-table production-table"><thead><tr><th>No</th><th>Item Check</th><th>Standard/Condition</th><th>Actual Inspec</th><th>Remarks</th></tr></thead><tbody>
+<tr><td>1</td><td><input class="check-item" type="text" value="Sensor Safety" readonly></td><td><input class="check-condition" type="text" value="Not Damage" readonly></td><td><select class="actual-inspec"><option value="">Pilih hasil</option><option value="OK">OK</option><option value="NG">NG</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>2</td><td><input class="check-item" type="text" value="Slide guide" readonly></td><td><input class="check-condition" type="text" value="Lubricate" readonly></td><td><select class="actual-inspec"><option value="">Pilih hasil</option><option value="OK">OK</option><option value="NG">NG</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>3</td><td><input class="check-item" type="text" value="Hydraulic pressure (clamp pump)" readonly></td><td><input class="check-condition" type="text" value="100-150 Bar" readonly></td><td><input class="actual-inspec" type="text" placeholder="Isi hasil pengukuran" maxlength="200"></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>4</td><td><input class="check-item" type="text" value="Air pressure" readonly></td><td><input class="check-condition" type="text" value="5-7 Bar" readonly></td><td><select class="actual-inspec"><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="Lainnya">Lainnya</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>5</td><td><input class="check-item" type="text" value="Temperature" readonly></td><td><input class="check-condition" type="text" value="26-33; ukur pukul 07:00 dan 13:00" readonly></td><td><input class="actual-inspec" type="text" placeholder="07:00 / 13:00" maxlength="200"></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>6</td><td><input class="check-item" type="text" value="Oil Check (clutch)" readonly></td><td><input class="check-condition" type="text" value="Spec level in" readonly></td><td><select class="actual-inspec"><option value="">Pilih hasil</option><option value="OK">OK</option><option value="NG">NG</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>7</td><td><input class="check-item" type="text" value="Fan Belt condition" readonly></td><td><input class="check-condition" type="text" value="Not damage" readonly></td><td><select class="actual-inspec"><option value="">Pilih hasil</option><option value="OK">OK</option><option value="NG">NG</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>8</td><td><input class="check-item" type="text" value="Pump Area" readonly></td><td><input class="check-condition" type="text" value="Maintenance" readonly></td><td><select class="actual-inspec"><option value="">Pilih hasil</option><option value="OK">OK</option><option value="NG">NG</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>9</td><td><input class="check-item" type="text" value="Balancing Machine" readonly></td><td><input class="check-condition" type="text" value="Centre" readonly></td><td><select class="actual-inspec"><option value="">Pilih hasil</option><option value="OK">OK</option><option value="NG">NG</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+</tbody></table></div>
+                <div class="form-actions"><button class="btn-primary" type="button" onclick="saveProductionChecksheet(this)">Save Checksheet</button></div>
+                <div class="form-message machine-save-message" aria-live="polite"></div>
+              </article>
+              <article class="section-card production-machine-card" data-machine-name="80T-01">
+                <div class="section-header"><div><h3>80T-01</h3><p>9 item pemeriksaan</p></div><span class="status-badge">Press Machine 17</span></div>
+                <div class="form-grid production-info"><div class="form-group"><label>Operator Name</label><input class="machine-operator" type="text" placeholder="Operator name" maxlength="200"></div></div>
+                <div class="table-wrapper"><table class="data-table production-table"><thead><tr><th>No</th><th>Item Check</th><th>Standard/Condition</th><th>Actual Inspec</th><th>Remarks</th></tr></thead><tbody>
+<tr><td>1</td><td><input class="check-item" type="text" value="Sensor Safety" readonly></td><td><input class="check-condition" type="text" value="Not Damage" readonly></td><td><select class="actual-inspec"><option value="">Pilih hasil</option><option value="OK">OK</option><option value="NG">NG</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>2</td><td><input class="check-item" type="text" value="Slide guide" readonly></td><td><input class="check-condition" type="text" value="Lubricate" readonly></td><td><select class="actual-inspec"><option value="">Pilih hasil</option><option value="OK">OK</option><option value="NG">NG</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>3</td><td><input class="check-item" type="text" value="Hydraulic pressure (clamp pump)" readonly></td><td><input class="check-condition" type="text" value="100-150 Bar" readonly></td><td><input class="actual-inspec" type="text" placeholder="Isi hasil pengukuran" maxlength="200"></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>4</td><td><input class="check-item" type="text" value="Air pressure" readonly></td><td><input class="check-condition" type="text" value="5-7 Bar" readonly></td><td><select class="actual-inspec"><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="Lainnya">Lainnya</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>5</td><td><input class="check-item" type="text" value="Temperature" readonly></td><td><input class="check-condition" type="text" value="26-33; ukur pukul 07:00 dan 13:00" readonly></td><td><input class="actual-inspec" type="text" placeholder="07:00 / 13:00" maxlength="200"></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>6</td><td><input class="check-item" type="text" value="Oil Check (clutch)" readonly></td><td><input class="check-condition" type="text" value="Spec level in" readonly></td><td><select class="actual-inspec"><option value="">Pilih hasil</option><option value="OK">OK</option><option value="NG">NG</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>7</td><td><input class="check-item" type="text" value="Fan Belt condition" readonly></td><td><input class="check-condition" type="text" value="Not damage" readonly></td><td><select class="actual-inspec"><option value="">Pilih hasil</option><option value="OK">OK</option><option value="NG">NG</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>8</td><td><input class="check-item" type="text" value="Pump Area" readonly></td><td><input class="check-condition" type="text" value="Maintenance" readonly></td><td><select class="actual-inspec"><option value="">Pilih hasil</option><option value="OK">OK</option><option value="NG">NG</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>9</td><td><input class="check-item" type="text" value="Balancing Machine" readonly></td><td><input class="check-condition" type="text" value="Centre" readonly></td><td><select class="actual-inspec"><option value="">Pilih hasil</option><option value="OK">OK</option><option value="NG">NG</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+</tbody></table></div>
+                <div class="form-actions"><button class="btn-primary" type="button" onclick="saveProductionChecksheet(this)">Save Checksheet</button></div>
+                <div class="form-message machine-save-message" aria-live="polite"></div>
+              </article>
+              <article class="section-card production-machine-card" data-machine-name="250T-C01">
+                <div class="section-header"><div><h3>250T-C01</h3><p>9 item pemeriksaan</p></div><span class="status-badge">Press Machine 18</span></div>
+                <div class="form-grid production-info"><div class="form-group"><label>Operator Name</label><input class="machine-operator" type="text" placeholder="Operator name" maxlength="200"></div></div>
+                <div class="table-wrapper"><table class="data-table production-table"><thead><tr><th>No</th><th>Item Check</th><th>Standard/Condition</th><th>Actual Inspec</th><th>Remarks</th></tr></thead><tbody>
+<tr><td>1</td><td><input class="check-item" type="text" value="Sensor Safety" readonly></td><td><input class="check-condition" type="text" value="Not Damage" readonly></td><td><select class="actual-inspec"><option value="">Pilih hasil</option><option value="OK">OK</option><option value="NG">NG</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>2</td><td><input class="check-item" type="text" value="Slide guide" readonly></td><td><input class="check-condition" type="text" value="Lubricate" readonly></td><td><select class="actual-inspec"><option value="">Pilih hasil</option><option value="OK">OK</option><option value="NG">NG</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>3</td><td><input class="check-item" type="text" value="Hydraulic pressure (clamp pump)" readonly></td><td><input class="check-condition" type="text" value="100-150 Bar" readonly></td><td><input class="actual-inspec" type="text" placeholder="Isi hasil pengukuran" maxlength="200"></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>4</td><td><input class="check-item" type="text" value="Air pressure" readonly></td><td><input class="check-condition" type="text" value="5-7 Bar" readonly></td><td><select class="actual-inspec"><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="Lainnya">Lainnya</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>5</td><td><input class="check-item" type="text" value="Temperature" readonly></td><td><input class="check-condition" type="text" value="26-33; ukur pukul 07:00 dan 13:00" readonly></td><td><input class="actual-inspec" type="text" placeholder="07:00 / 13:00" maxlength="200"></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>6</td><td><input class="check-item" type="text" value="Oil Check (clutch)" readonly></td><td><input class="check-condition" type="text" value="Spec level in" readonly></td><td><select class="actual-inspec"><option value="">Pilih hasil</option><option value="OK">OK</option><option value="NG">NG</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>7</td><td><input class="check-item" type="text" value="Fan Belt condition" readonly></td><td><input class="check-condition" type="text" value="Not damage" readonly></td><td><select class="actual-inspec"><option value="">Pilih hasil</option><option value="OK">OK</option><option value="NG">NG</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>8</td><td><input class="check-item" type="text" value="Pump Area" readonly></td><td><input class="check-condition" type="text" value="Maintenance" readonly></td><td><select class="actual-inspec"><option value="">Pilih hasil</option><option value="OK">OK</option><option value="NG">NG</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>9</td><td><input class="check-item" type="text" value="Balancing Machine" readonly></td><td><input class="check-condition" type="text" value="Centre" readonly></td><td><select class="actual-inspec"><option value="">Pilih hasil</option><option value="OK">OK</option><option value="NG">NG</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+</tbody></table></div>
+                <div class="form-actions"><button class="btn-primary" type="button" onclick="saveProductionChecksheet(this)">Save Checksheet</button></div>
+                <div class="form-message machine-save-message" aria-live="polite"></div>
+              </article>
+              <article class="section-card production-machine-card" data-machine-name="Spot Welding Siku Reinforce">
+                <div class="section-header"><div><h3>Spot Welding Siku Reinforce</h3><p>6 item pemeriksaan</p></div><span class="status-badge">Spot Welding 19</span></div>
+                <div class="form-grid production-info"><div class="form-group"><label>Operator Name</label><input class="machine-operator" type="text" placeholder="Operator name" maxlength="200"></div></div>
+                <div class="table-wrapper"><table class="data-table production-table"><thead><tr><th>No</th><th>Item Check</th><th>Standard/Condition</th><th>Actual Inspec</th><th>Remarks</th></tr></thead><tbody>
+<tr><td>1</td><td><input class="check-item" type="text" value="Air pressure" readonly></td><td><input class="check-condition" type="text" value="2-5 Bar" readonly></td><td><select class="actual-inspec"><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="Lainnya">Lainnya</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>2</td><td><input class="check-item" type="text" value="Pump Water Cooler" readonly></td><td><input class="check-condition" type="text" value="Water circulation" readonly></td><td><select class="actual-inspec"><option value="">Pilih hasil</option><option value="OK">OK</option><option value="NG">NG</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>3</td><td><input class="check-item" type="text" value="Setting Pengapian" readonly></td><td><input class="check-condition" type="text" value="Adjust model" readonly></td><td><select class="actual-inspec"><option value="">Pilih hasil</option><option value="OK">OK</option><option value="NG">NG</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>4</td><td><input class="check-item" type="text" value="Water Tank" readonly></td><td><input class="check-condition" type="text" value="Spec level in" readonly></td><td><select class="actual-inspec"><option value="">Pilih hasil</option><option value="OK">OK</option><option value="NG">NG</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>5</td><td><input class="check-item" type="text" value="Dressing Tip Spot Welding" readonly></td><td><input class="check-condition" type="text" value="Bersih; setiap 360 Shoot" readonly></td><td><select class="actual-inspec"><option value="">Pilih hasil</option><option value="OK">OK</option><option value="NG">NG</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>6</td><td><input class="check-item" type="text" value="Tinggi Spot Welding" readonly></td><td><input class="check-condition" type="text" value="Inspeksi Jig &quot;OK&quot;; setiap 360 Shoot" readonly></td><td><select class="actual-inspec"><option value="">Pilih hasil</option><option value="OK">OK</option><option value="NG">NG</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+</tbody></table></div>
+                <div class="form-actions"><button class="btn-primary" type="button" onclick="saveProductionChecksheet(this)">Save Checksheet</button></div>
+                <div class="form-message machine-save-message" aria-live="polite"></div>
+              </article>
+              <article class="section-card production-machine-card" data-machine-name="Spot Welding Hinge Part">
+                <div class="section-header"><div><h3>Spot Welding Hinge Part</h3><p>4 item pemeriksaan</p></div><span class="status-badge">Spot Welding 20</span></div>
+                <div class="form-grid production-info"><div class="form-group"><label>Operator Name</label><input class="machine-operator" type="text" placeholder="Operator name" maxlength="200"></div></div>
+                <div class="table-wrapper"><table class="data-table production-table"><thead><tr><th>No</th><th>Item Check</th><th>Standard/Condition</th><th>Actual Inspec</th><th>Remarks</th></tr></thead><tbody>
+<tr><td>1</td><td><input class="check-item" type="text" value="Air pressure" readonly></td><td><input class="check-condition" type="text" value="2-5 Bar" readonly></td><td><select class="actual-inspec"><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="Lainnya">Lainnya</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>2</td><td><input class="check-item" type="text" value="Pump water cooler" readonly></td><td><input class="check-condition" type="text" value="Water circulation" readonly></td><td><select class="actual-inspec"><option value="">Pilih hasil</option><option value="OK">OK</option><option value="NG">NG</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>3</td><td><input class="check-item" type="text" value="Setting pengapian" readonly></td><td><input class="check-condition" type="text" value="Adjust model" readonly></td><td><select class="actual-inspec"><option value="">Pilih hasil</option><option value="OK">OK</option><option value="NG">NG</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>4</td><td><input class="check-item" type="text" value="Water tank" readonly></td><td><input class="check-condition" type="text" value="Spec level in" readonly></td><td><select class="actual-inspec"><option value="">Pilih hasil</option><option value="OK">OK</option><option value="NG">NG</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+</tbody></table></div>
+                <div class="form-actions"><button class="btn-primary" type="button" onclick="saveProductionChecksheet(this)">Save Checksheet</button></div>
+                <div class="form-message machine-save-message" aria-live="polite"></div>
+              </article>
+              <article class="section-card production-machine-card" data-machine-name="45T-01">
+                <div class="section-header"><div><h3>45T-01</h3><p>6 item pemeriksaan</p></div><span class="status-badge">Die Caulking 21</span></div>
+                <div class="form-grid production-info"><div class="form-group"><label>Operator Name</label><input class="machine-operator" type="text" placeholder="Operator name" maxlength="200"></div></div>
+                <div class="table-wrapper"><table class="data-table production-table"><thead><tr><th>No</th><th>Item Check</th><th>Standard/Condition</th><th>Actual Inspec</th><th>Remarks</th></tr></thead><tbody>
+<tr><td>1</td><td><input class="check-item" type="text" value="Air pressure" readonly></td><td><input class="check-condition" type="text" value="5-7 Bar" readonly></td><td><select class="actual-inspec"><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="Lainnya">Lainnya</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>2</td><td><input class="check-item" type="text" value="Slide guide" readonly></td><td><input class="check-condition" type="text" value="Lubricate" readonly></td><td><select class="actual-inspec"><option value="">Pilih hasil</option><option value="OK">OK</option><option value="NG">NG</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>3</td><td><input class="check-item" type="text" value="Hydraulic pressure (clamp pump)" readonly></td><td><input class="check-condition" type="text" value="100-150 Bar" readonly></td><td><input class="actual-inspec" type="text" placeholder="Isi hasil pengukuran" maxlength="200"></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>4</td><td><input class="check-item" type="text" value="Pump Area" readonly></td><td><input class="check-condition" type="text" value="Clean" readonly></td><td><select class="actual-inspec"><option value="">Pilih hasil</option><option value="OK">OK</option><option value="NG">NG</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>5</td><td><input class="check-item" type="text" value="Oil Check (clutch)" readonly></td><td><input class="check-condition" type="text" value="Spec level in" readonly></td><td><select class="actual-inspec"><option value="">Pilih hasil</option><option value="OK">OK</option><option value="NG">NG</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>6</td><td><input class="check-item" type="text" value="Fan Belt condition" readonly></td><td><input class="check-condition" type="text" value="Not damage" readonly></td><td><select class="actual-inspec"><option value="">Pilih hasil</option><option value="OK">OK</option><option value="NG">NG</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+</tbody></table></div>
+                <div class="form-actions"><button class="btn-primary" type="button" onclick="saveProductionChecksheet(this)">Save Checksheet</button></div>
+                <div class="form-message machine-save-message" aria-live="polite"></div>
+              </article>
+              <article class="section-card production-machine-card" data-machine-name="40T-01">
+                <div class="section-header"><div><h3>40T-01</h3><p>6 item pemeriksaan</p></div><span class="status-badge">Die Caulking 22</span></div>
+                <div class="form-grid production-info"><div class="form-group"><label>Operator Name</label><input class="machine-operator" type="text" placeholder="Operator name" maxlength="200"></div></div>
+                <div class="table-wrapper"><table class="data-table production-table"><thead><tr><th>No</th><th>Item Check</th><th>Standard/Condition</th><th>Actual Inspec</th><th>Remarks</th></tr></thead><tbody>
+<tr><td>1</td><td><input class="check-item" type="text" value="Air pressure" readonly></td><td><input class="check-condition" type="text" value="5-7 Bar" readonly></td><td><select class="actual-inspec"><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="Lainnya">Lainnya</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>2</td><td><input class="check-item" type="text" value="Slide guide" readonly></td><td><input class="check-condition" type="text" value="Lubricate" readonly></td><td><select class="actual-inspec"><option value="">Pilih hasil</option><option value="OK">OK</option><option value="NG">NG</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>3</td><td><input class="check-item" type="text" value="Hydraulic pressure (clamp pump)" readonly></td><td><input class="check-condition" type="text" value="100-150 Bar" readonly></td><td><input class="actual-inspec" type="text" placeholder="Isi hasil pengukuran" maxlength="200"></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>4</td><td><input class="check-item" type="text" value="Pump Area" readonly></td><td><input class="check-condition" type="text" value="Clean" readonly></td><td><select class="actual-inspec"><option value="">Pilih hasil</option><option value="OK">OK</option><option value="NG">NG</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>5</td><td><input class="check-item" type="text" value="Oil Check (clutch)" readonly></td><td><input class="check-condition" type="text" value="Spec level in" readonly></td><td><select class="actual-inspec"><option value="">Pilih hasil</option><option value="OK">OK</option><option value="NG">NG</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>6</td><td><input class="check-item" type="text" value="Fan Belt condition" readonly></td><td><input class="check-condition" type="text" value="Not damage" readonly></td><td><select class="actual-inspec"><option value="">Pilih hasil</option><option value="OK">OK</option><option value="NG">NG</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+</tbody></table></div>
+                <div class="form-actions"><button class="btn-primary" type="button" onclick="saveProductionChecksheet(this)">Save Checksheet</button></div>
+                <div class="form-message machine-save-message" aria-live="polite"></div>
+              </article>
+              <article class="section-card production-machine-card" data-machine-name="45T-02">
+                <div class="section-header"><div><h3>45T-02</h3><p>6 item pemeriksaan</p></div><span class="status-badge">Die Caulking 23</span></div>
+                <div class="form-grid production-info"><div class="form-group"><label>Operator Name</label><input class="machine-operator" type="text" placeholder="Operator name" maxlength="200"></div></div>
+                <div class="table-wrapper"><table class="data-table production-table"><thead><tr><th>No</th><th>Item Check</th><th>Standard/Condition</th><th>Actual Inspec</th><th>Remarks</th></tr></thead><tbody>
+<tr><td>1</td><td><input class="check-item" type="text" value="Air pressure" readonly></td><td><input class="check-condition" type="text" value="5-7 Bar" readonly></td><td><select class="actual-inspec"><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="Lainnya">Lainnya</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>2</td><td><input class="check-item" type="text" value="Slide guide" readonly></td><td><input class="check-condition" type="text" value="Lubricate" readonly></td><td><select class="actual-inspec"><option value="">Pilih hasil</option><option value="OK">OK</option><option value="NG">NG</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>3</td><td><input class="check-item" type="text" value="Hydraulic pressure (clamp pump)" readonly></td><td><input class="check-condition" type="text" value="100-150 Bar" readonly></td><td><input class="actual-inspec" type="text" placeholder="Isi hasil pengukuran" maxlength="200"></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>4</td><td><input class="check-item" type="text" value="Pump Area" readonly></td><td><input class="check-condition" type="text" value="Clean" readonly></td><td><select class="actual-inspec"><option value="">Pilih hasil</option><option value="OK">OK</option><option value="NG">NG</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>5</td><td><input class="check-item" type="text" value="Oil Check (clutch)" readonly></td><td><input class="check-condition" type="text" value="Spec level in" readonly></td><td><select class="actual-inspec"><option value="">Pilih hasil</option><option value="OK">OK</option><option value="NG">NG</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>6</td><td><input class="check-item" type="text" value="Fan Belt condition" readonly></td><td><input class="check-condition" type="text" value="Not damage" readonly></td><td><select class="actual-inspec"><option value="">Pilih hasil</option><option value="OK">OK</option><option value="NG">NG</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+</tbody></table></div>
+                <div class="form-actions"><button class="btn-primary" type="button" onclick="saveProductionChecksheet(this)">Save Checksheet</button></div>
+                <div class="form-message machine-save-message" aria-live="polite"></div>
+              </article>
+
+
+              <article class="section-card production-machine-card" data-machine-name="Spot Welding Nut Reinforce">
+                <div class="section-header"><div><h3>Spot Welding Nut Reinforce</h3><p>4 item pemeriksaan</p></div><span class="status-badge">Spot Welding 24</span></div>
+                <div class="form-grid production-info"><div class="form-group"><label>Operator Name</label><input class="machine-operator" type="text" placeholder="Operator name" maxlength="200"></div></div>
+                <div class="table-wrapper"><table class="data-table production-table"><thead><tr><th>No</th><th>Item Check</th><th>Standard/Condition</th><th>Actual Inspec</th><th>Remarks</th></tr></thead><tbody>
+<tr><td>1</td><td><input class="check-item" type="text" value="Air pressure" readonly></td><td><input class="check-condition" type="text" value="2-5 Bar" readonly></td><td><select class="actual-inspec"><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="Lainnya">Lainnya</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>2</td><td><input class="check-item" type="text" value="Pump water cooler" readonly></td><td><input class="check-condition" type="text" value="Water circulation" readonly></td><td><select class="actual-inspec"><option value="">Pilih hasil</option><option value="OK">OK</option><option value="NG">NG</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>3</td><td><input class="check-item" type="text" value="Setting pengapian" readonly></td><td><input class="check-condition" type="text" value="Adjust model" readonly></td><td><select class="actual-inspec"><option value="">Pilih hasil</option><option value="OK">OK</option><option value="NG">NG</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>4</td><td><input class="check-item" type="text" value="Water tank" readonly></td><td><input class="check-condition" type="text" value="Spec level in" readonly></td><td><select class="actual-inspec"><option value="">Pilih hasil</option><option value="OK">OK</option><option value="NG">NG</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+</tbody></table></div>
+                <div class="form-actions"><button class="btn-primary" type="button" onclick="saveProductionChecksheet(this)">Save Checksheet</button></div>
+                <div class="form-message machine-save-message" aria-live="polite"></div>
+              </article>
+              <article class="section-card production-machine-card" data-machine-name="Spot Welding Reinforce R">
+                <div class="section-header"><div><h3>Spot Welding Reinforce R</h3><p>4 item pemeriksaan</p></div><span class="status-badge">Spot Welding 25</span></div>
+                <div class="form-grid production-info"><div class="form-group"><label>Operator Name</label><input class="machine-operator" type="text" placeholder="Operator name" maxlength="200"></div></div>
+                <div class="table-wrapper"><table class="data-table production-table"><thead><tr><th>No</th><th>Item Check</th><th>Standard/Condition</th><th>Actual Inspec</th><th>Remarks</th></tr></thead><tbody>
+<tr><td>1</td><td><input class="check-item" type="text" value="Air pressure" readonly></td><td><input class="check-condition" type="text" value="2-5 Bar" readonly></td><td><select class="actual-inspec"><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="Lainnya">Lainnya</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>2</td><td><input class="check-item" type="text" value="Pump water cooler" readonly></td><td><input class="check-condition" type="text" value="Water circulation" readonly></td><td><select class="actual-inspec"><option value="">Pilih hasil</option><option value="OK">OK</option><option value="NG">NG</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>3</td><td><input class="check-item" type="text" value="Setting pengapian" readonly></td><td><input class="check-condition" type="text" value="Adjust model" readonly></td><td><select class="actual-inspec"><option value="">Pilih hasil</option><option value="OK">OK</option><option value="NG">NG</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>4</td><td><input class="check-item" type="text" value="Water tank" readonly></td><td><input class="check-condition" type="text" value="Spec level in" readonly></td><td><select class="actual-inspec"><option value="">Pilih hasil</option><option value="OK">OK</option><option value="NG">NG</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+</tbody></table></div>
+                <div class="form-actions"><button class="btn-primary" type="button" onclick="saveProductionChecksheet(this)">Save Checksheet</button></div>
+                <div class="form-message machine-save-message" aria-live="polite"></div>
+              </article>
+              <article class="section-card production-machine-card" data-machine-name="Spot Welding Reinforce L">
+                <div class="section-header"><div><h3>Spot Welding Reinforce L</h3><p>4 item pemeriksaan</p></div><span class="status-badge">Spot Welding 26</span></div>
+                <div class="form-grid production-info"><div class="form-group"><label>Operator Name</label><input class="machine-operator" type="text" placeholder="Operator name" maxlength="200"></div></div>
+                <div class="table-wrapper"><table class="data-table production-table"><thead><tr><th>No</th><th>Item Check</th><th>Standard/Condition</th><th>Actual Inspec</th><th>Remarks</th></tr></thead><tbody>
+<tr><td>1</td><td><input class="check-item" type="text" value="Air pressure" readonly></td><td><input class="check-condition" type="text" value="2-5 Bar" readonly></td><td><select class="actual-inspec"><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="Lainnya">Lainnya</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>2</td><td><input class="check-item" type="text" value="Pump water cooler" readonly></td><td><input class="check-condition" type="text" value="Water circulation" readonly></td><td><select class="actual-inspec"><option value="">Pilih hasil</option><option value="OK">OK</option><option value="NG">NG</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>3</td><td><input class="check-item" type="text" value="Setting pengapian" readonly></td><td><input class="check-condition" type="text" value="Adjust model" readonly></td><td><select class="actual-inspec"><option value="">Pilih hasil</option><option value="OK">OK</option><option value="NG">NG</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>4</td><td><input class="check-item" type="text" value="Water tank" readonly></td><td><input class="check-condition" type="text" value="Spec level in" readonly></td><td><select class="actual-inspec"><option value="">Pilih hasil</option><option value="OK">OK</option><option value="NG">NG</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+</tbody></table></div>
+                <div class="form-actions"><button class="btn-primary" type="button" onclick="saveProductionChecksheet(this)">Save Checksheet</button></div>
+                <div class="form-message machine-save-message" aria-live="polite"></div>
+              </article>
+              <article class="section-card production-machine-card" data-machine-name="Spot Nut Hinge Upper">
+                <div class="section-header"><div><h3>Spot Nut Hinge Upper</h3><p>4 item pemeriksaan</p></div><span class="status-badge">Spot Welding 27</span></div>
+                <div class="form-grid production-info"><div class="form-group"><label>Operator Name</label><input class="machine-operator" type="text" placeholder="Operator name" maxlength="200"></div></div>
+                <div class="table-wrapper"><table class="data-table production-table"><thead><tr><th>No</th><th>Item Check</th><th>Standard/Condition</th><th>Actual Inspec</th><th>Remarks</th></tr></thead><tbody>
+<tr><td>1</td><td><input class="check-item" type="text" value="Air pressure" readonly></td><td><input class="check-condition" type="text" value="2-5 Bar" readonly></td><td><select class="actual-inspec"><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="Lainnya">Lainnya</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>2</td><td><input class="check-item" type="text" value="Pump water cooler" readonly></td><td><input class="check-condition" type="text" value="Water circulation" readonly></td><td><select class="actual-inspec"><option value="">Pilih hasil</option><option value="OK">OK</option><option value="NG">NG</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>3</td><td><input class="check-item" type="text" value="Setting pengapian" readonly></td><td><input class="check-condition" type="text" value="Adjust model" readonly></td><td><select class="actual-inspec"><option value="">Pilih hasil</option><option value="OK">OK</option><option value="NG">NG</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>4</td><td><input class="check-item" type="text" value="Water tank" readonly></td><td><input class="check-condition" type="text" value="Spec level in" readonly></td><td><select class="actual-inspec"><option value="">Pilih hasil</option><option value="OK">OK</option><option value="NG">NG</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+</tbody></table></div>
+                <div class="form-actions"><button class="btn-primary" type="button" onclick="saveProductionChecksheet(this)">Save Checksheet</button></div>
+                <div class="form-message machine-save-message" aria-live="polite"></div>
+              </article>
+              <article class="section-card production-machine-card" data-machine-name="Spot Nut Hinge Center">
+                <div class="section-header"><div><h3>Spot Nut Hinge Center</h3><p>4 item pemeriksaan</p></div><span class="status-badge">Spot Welding 28</span></div>
+                <div class="form-grid production-info"><div class="form-group"><label>Operator Name</label><input class="machine-operator" type="text" placeholder="Operator name" maxlength="200"></div></div>
+                <div class="table-wrapper"><table class="data-table production-table"><thead><tr><th>No</th><th>Item Check</th><th>Standard/Condition</th><th>Actual Inspec</th><th>Remarks</th></tr></thead><tbody>
+<tr><td>1</td><td><input class="check-item" type="text" value="Air pressure" readonly></td><td><input class="check-condition" type="text" value="2-5 Bar" readonly></td><td><select class="actual-inspec"><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="Lainnya">Lainnya</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>2</td><td><input class="check-item" type="text" value="Pump water cooler" readonly></td><td><input class="check-condition" type="text" value="Water circulation" readonly></td><td><select class="actual-inspec"><option value="">Pilih hasil</option><option value="OK">OK</option><option value="NG">NG</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>3</td><td><input class="check-item" type="text" value="Setting pengapian" readonly></td><td><input class="check-condition" type="text" value="Adjust model" readonly></td><td><select class="actual-inspec"><option value="">Pilih hasil</option><option value="OK">OK</option><option value="NG">NG</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>4</td><td><input class="check-item" type="text" value="Water tank" readonly></td><td><input class="check-condition" type="text" value="Spec level in" readonly></td><td><select class="actual-inspec"><option value="">Pilih hasil</option><option value="OK">OK</option><option value="NG">NG</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+</tbody></table></div>
+                <div class="form-actions"><button class="btn-primary" type="button" onclick="saveProductionChecksheet(this)">Save Checksheet</button></div>
+                <div class="form-message machine-save-message" aria-live="polite"></div>
+              </article>
+<article class="section-card production-machine-card" data-machine-name="Spot Welding Base Compresor">
+                <div class="section-header"><div><h3>Spot Welding Base Compresor</h3><p>6 item pemeriksaan</p></div><span class="status-badge">Spot Welding 29</span></div>
+                <div class="form-grid production-info"><div class="form-group"><label>Operator Name</label><input class="machine-operator" type="text" placeholder="Operator name" maxlength="200"></div></div>
+                <div class="table-wrapper"><table class="data-table production-table"><thead><tr><th>No</th><th>Item Check</th><th>Standard/Condition</th><th>Actual Inspec</th><th>Remarks</th></tr></thead><tbody>
+<tr><td>1</td><td><input class="check-item" type="text" value="Air Preasure" readonly></td><td><input class="check-condition" type="text" value="2-5 Bar" readonly></td><td><select class="actual-inspec"><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="Lainnya">Lainnya</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>2</td><td><input class="check-item" type="text" value="Pump Water Cooller" readonly></td><td><input class="check-condition" type="text" value="Water circulation" readonly></td><td><select class="actual-inspec"><option value="">Pilih hasil</option><option value="OK">OK</option><option value="NG">NG</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>3</td><td><input class="check-item" type="text" value="Setting Pengapian" readonly></td><td><input class="check-condition" type="text" value="Adjust model" readonly></td><td><select class="actual-inspec"><option value="">Pilih hasil</option><option value="OK">OK</option><option value="NG">NG</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>4</td><td><input class="check-item" type="text" value="Water Tank" readonly></td><td><input class="check-condition" type="text" value="Spec level in" readonly></td><td><select class="actual-inspec"><option value="">Pilih hasil</option><option value="OK">OK</option><option value="NG">NG</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>5</td><td><input class="check-item" type="text" value="Dressing Tip Spot Welding" readonly></td><td><input class="check-condition" type="text" value="Bersih; setiap 360 Shoot" readonly></td><td><select class="actual-inspec"><option value="">Pilih hasil</option><option value="OK">OK</option><option value="NG">NG</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+<tr><td>6</td><td><input class="check-item" type="text" value="Tinggi Spot Welding" readonly></td><td><input class="check-condition" type="text" value="Inspeksi Jig &quot;OK&quot;; setiap 360 Shoot" readonly></td><td><select class="actual-inspec"><option value="">Pilih hasil</option><option value="OK">OK</option><option value="NG">NG</option></select></td><td><input class="check-remarks" type="text" placeholder="Remarks" maxlength="500"></td></tr>
+</tbody></table></div>
+                <div class="form-actions"><button class="btn-primary" type="button" onclick="saveProductionChecksheet(this)">Save Checksheet</button></div>
+                <div class="form-message machine-save-message" aria-live="polite"></div>
+              </article>
+
+
+            </div>
+            <div class="form-actions"><button type="button" class="production-download-button" onclick="downloadProductionResult()">Download Hasil Excel</button></div>
+            <div id="productionMessage" class="form-message"></div>
+            <div id="productionHistory" style="margin-top:24px"><div class="section-header" style="margin-bottom:12px"><div><h3>Production Checksheet History</h3><p>Data Production yang sudah tersimpan.</p></div></div><div id="productionHistoryList"><div class="form-message">Loading history...</div></div></div>
+          </div>
+        </section>
+
+        <section id="efficiencyPage" class="page-section hidden">
+          <div class="section-card">
+            <div class="section-header">
+              <div>
+                <h3>Input Efficiency</h3>
+                <p>Input data setiap shift. Target efficiency tetap 90%.</p>
+              </div>
+            </div>
+
+            <form id="efficiencyForm" class="efficiency-form">
+              <div class="form-group">
+                <label for="effType">Efficiency Type</label>
+                <select id="effType" required>
+                  <option value="TPL 1">Eff% TPL 1</option>
+                  <option value="TPL 2">Eff% TPL 2</option>
+                  <option value="Plate Rear">Eff% Plate Rear</option>
+                  <option value="Machine Bottom Plate">Eff% Machine Bottom Plate</option>
+                  <option value="Assy Plate Rear R1">Eff % Assy Plate Rear R1</option>
+                  <option value="Assy Bottom Plate">Eff % Assy Bottom Plate</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="effDate">Inspection Date</label>
+                <input id="effDate" type="date" required>
+              </div>
+              <div class="form-group">
+                <label for="effShift">Shift</label>
+                <select id="effShift" required>
+                  <option>Shift 1</option>
+                  <option>Shift 2</option>
+                  <option>Shift 3</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="effStopAsPlanned">Stop As Planned</label>
+                <select id="effStopAsPlanned">
+                  <option value="">-- Pilih Stop As Planned --</option>
+                  <option value="Meeting">Meeting</option>
+                  <option value="Training">Training</option>
+                  <option value="Loaded">Loaded</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="effStopAsPlannedValue">Nilai Stop As Planned</label>
+                <input id="effStopAsPlannedValue" type="number" min="0" step="0.01" placeholder="Input nilai">
+              </div>
+              <div class="form-group">
+                <label for="effStopTime">Stop Time</label>
+                <select id="effStopTime">
+                  <option value="">-- Pilih Stop Time --</option>
+                  <option value="QDC">QDC</option>
+                  <option value="Setting Material">Setting Material</option>
+                  <option value="Others">Others</option>
+                  <option value="Machine">Machine</option>
+                  <option value="Tolling (Jig problem)">Tolling (Jig problem)</option>
+                  <option value="Process">Process</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="effStopTimeValue">Nilai Stop Time (min)</label>
+                <input id="effStopTimeValue" type="number" min="0" step="0.01" placeholder="Input menit">
+              </div>
+              <div class="form-group">
+                <label for="effWorkingTime">Total Working Time (min)</label>
+                <input id="effWorkingTime" type="number" min="0.01" step="0.01" required>
+              </div>
+              <div class="form-group">
+                <label for="effGoodQty">Good Quantity (EA)</label>
+                <input id="effGoodQty" type="number" min="0" step="1" required>
+              </div>
+              <div class="form-group">
+                <label for="effDefectQty">Defect Quantity (EA)</label>
+                <input id="effDefectQty" type="number" min="0" step="1" value="0" required>
+              </div>
+              <div class="form-group">
+                <label>Target Efficiency</label>
+                <input type="text" value="90%" readonly>
+              </div>
+              <div class="form-actions">
+                <button class="btn-primary" type="submit">Simpan Data Shift</button>
+              </div>
+            </form>
+            <div id="efficiencyMessage" class="form-message" aria-live="polite"></div>
+          </div>
+
+          <div class="section-card efficiency-dashboard-card">
+            <div class="section-header">
+              <div>
+                <h3>Daily Efficiency per Mesin</h3>
+                <p>Semua kategori mesin ditampilkan terpisah berdasarkan tanggal.</p>
+              </div>
+              <button class="primary-small-btn" type="button" onclick="loadEfficiencyDashboard()">Refresh</button>
+            </div>
+            <div class="efficiency-chart-grid">
+              <article class="efficiency-chart-card"><h4>Eff% TPL 1</h4><div id="effChartTPL1"></div></article>
+              <article class="efficiency-chart-card"><h4>Eff% TPL 2</h4><div id="effChartTPL2"></div></article>
+              <article class="efficiency-chart-card"><h4>Eff% Plate Rear</h4><div id="effChartPlateRear"></div></article>
+              <article class="efficiency-chart-card"><h4>Eff% Machine Bottom Plate</h4><div id="effChartMachineBottom"></div></article>
+              <article class="efficiency-chart-card"><h4>Eff% Assy Plate Rear R1</h4><div id="effChartAssyRear"></div></article>
+              <article class="efficiency-chart-card"><h4>Eff% Assy Bottom Plate</h4><div id="effChartAssyBottom"></div></article>
+            </div>
+          </div>
+        </section>
+        <section id="usersPage" class="page-section hidden">
+
+            <div class="section-card">
+
+                <div class="section-header users-header">
+                    <div>
+                        <h3>User Management</h3>
+                        <p>Kelola pengguna dan hak akses Sangil Production.</p>
+                    </div>
+
+                    <button class="primary-small-btn" onclick="openUserModal()">
+                        + Add User
+                    </button>
+                </div>
+
+                <div id="userMessage" class="user-message"></div>
+
+                <div class="table-wrapper">
+                    <table class="user-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Username</th>
+                                <th>Full Name</th>
+                                <th>Role</th>
+                                <th>Status</th>
+                                <th>Created</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+
+                        <tbody id="usersTableBody">
+                            <tr>
+                                <td colspan="7" class="loading-cell">
+                                    Loading users...
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+
+        </section>
+
+        <div id="userModal" class="modal-overlay hidden">
+
+            <div class="modal-card">
+
+                <div class="modal-header">
+                    <div>
+                        <h3 id="userModalTitle">Add User</h3>
+                        <p>Masukkan informasi pengguna.</p>
+                    </div>
+
+                    <button class="modal-close" onclick="closeUserModal()">X</button>
+                </div>
+
+                <form id="userForm">
+
+                    <input type="hidden" id="userId">
+
+                    <label>Username</label>
+                    <input id="userUsername" type="text" required>
+
+                    <label>Full Name</label>
+                    <input id="userFullName" type="text" required>
+
+                    <label>Role</label>
+                    <select id="userRole" required>
+                        <option value="ADMIN">ADMIN</option>
+                        <option value="MANAGER_PRODUCTION">MANAGER PRODUCTION</option>
+                        <option value="OPERATOR">OPERATOR</option>
+                        <option value="VIEWER">VIEWER</option>
+                    </select>
+
+                    <div id="passwordGroup">
+                        <label>Password</label>
+                        <input id="userPassword" type="password" minlength="6">
+                        <small>Minimal 6 karakter.</small>
+                    </div>
+
+                    <div id="activeGroup" class="checkbox-row hidden">
+                        <label class="checkbox-label">
+                            <input id="userActive" type="checkbox">
+                            Active
+                        </label>
+                    </div>
+
+                    <div id="userFormError" class="form-error"></div>
+
+                    <div class="modal-actions">
+                        <button type="button" class="cancel-btn" onclick="closeUserModal()">
+                            Cancel
+                        </button>
+
+                        <button type="submit" class="primary-small-btn">
+                            Save User
+                        </button>
+                    </div>
+
+                </form>
+
+            </div>
+
+        </div>
+
+        <div id="passwordModal" class="modal-overlay hidden">
+
+            <div class="modal-card small-modal">
+
+                <div class="modal-header">
+                    <div>
+                        <h3>Reset Password</h3>
+                        <p id="resetPasswordUser"></p>
+                    </div>
+
+                    <button class="modal-close" onclick="closePasswordModal()">X</button>
+                </div>
+
+                <form id="passwordForm">
+
+                    <input type="hidden" id="resetUserId">
+
+                    <label>New Password</label>
+                    <input id="resetPassword" type="password" minlength="6" required>
+
+                    <div id="passwordFormError" class="form-error"></div>
+
+                    <div class="modal-actions">
+                        <button type="button" class="cancel-btn" onclick="closePasswordModal()">
+                            Cancel
+                        </button>
+
+                        <button type="submit" class="primary-small-btn">
+                            Reset Password
+                        </button>
+                    </div>
+
+                </form>
+
+            </div>
+
+        </div>
+
+        
+        <section id="auditPage" class="page-section hidden">
+            <div class="section-card">
+                <div class="section-header">
+                    <div>
+                        <h3>Audit Log</h3>
+                        <p>Riwayat aktivitas pengguna sistem.</p>
+                    </div>
+
+                    <button
+                        class="secondary-btn"
+                        onclick="loadAuditLogs()"
+                    >
+                        Refresh
+                    </button>
+                </div>
+
+                <div id="auditLogSummary" class="audit-log-summary">
+                    Loading Audit Log...
+                </div>
+
+                <div class="table-wrapper audit-log-wrapper">
+                    <table class="data-table audit-log-table">
+                        <thead>
+                            <tr>
+                                <th>No</th>
+                                <th>Tanggal</th>
+                                <th>Jam</th>
+                                <th>User</th>
+                                <th>Action</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+
+                        <tbody id="auditLogBody">
+                            <tr>
+                                <td colspan="6" class="audit-loading">
+                                    Loading Audit Log...
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+    </main>
+</div>
+
+<script src="app.js?v=sangil-public-metal29-fix20261026"></script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
